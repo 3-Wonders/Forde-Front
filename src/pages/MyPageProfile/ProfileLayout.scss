@@ -1,0 +1,216 @@
+$bg-dark: #1E252B;
+$bg-more-dark: #262D34;
+$accent: #ff7b00;
+$text: #fff;
+$text-muted: #ccc;
+// background: #2C353D; 인풋창 백그라운드 테스트1
+
+body {
+  background-color: $bg-dark;
+  margin: 0;
+  font-family: sans-serif;
+  color: $text;
+}
+
+.profilePageContainer {
+  width: 100%;
+  min-height: calc(100vh - 60px);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background-color: $bg-dark;
+}
+
+.profileInner {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  max-width: 1400px; 
+  width: 100%;
+  padding: 0 1.5rem; 
+  align-items: flex-start;
+}
+
+.profileLeftCard,
+.profileCenterCard,
+.profileRightCard {
+  background-color: $bg-more-dark;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.cardTitle {
+  margin: 0 0 1rem 0;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.profileLeftCard {
+  width: 200px;
+  .menuList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    li {
+      padding: 0.75rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      i {
+        font-size: 1rem;
+      }
+      &:hover {
+        color: $accent;
+      }
+      &.active {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+        padding-left: 0.5rem;
+      }
+    }
+  }
+}
+
+.profileCenterCard {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 800px; 
+  width: 100%;
+  .profileImageWrapper {
+    position: relative;
+    margin-bottom: 2rem;
+    .profileImage {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .cameraBtn {
+      position: absolute;
+      bottom: 0;
+      right: 35%;
+      transform: translateX(50%);
+      background: $accent;
+      border: none;
+      border-radius: 50%;
+      padding: 0.5rem;
+      cursor: pointer;
+      color: #fff;
+      i {
+        font-size: 1rem;
+      }
+    }
+  }
+  .formGroup {
+    width: 100%; 
+    margin-bottom: 1rem;
+    text-align: left;
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #97989D;
+    }
+    input,
+    textarea {
+      width: 100%;
+      background-color: $bg-dark;
+      border: 1px solid #444;
+      border-radius: 4px;
+      padding: 0.75rem;
+      color: $text;
+      font-size: 0.95rem;
+    }
+    textarea {
+      height: auto;
+      resize: none;
+    }
+    .tags {
+      margin-top: 0.5rem;
+      span {
+        display: inline-block;
+
+        background-color: #1d1f23;
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        margin-right: 0.5rem;
+        font-size: 0.85rem;
+      }
+    }
+  }
+  .saveBtn {
+    align-self: flex-end;
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: $accent;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+}
+
+.profileRightCard {
+  width: 300px;
+  .userHeader {
+    // display: flex;
+    // align-items: center;    
+    text-align: left; 
+    gap: 1rem;
+    margin-top: 1rem;
+    
+    margin-bottom: 1rem;
+    .userThumb {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+      margin-bottom: 0.5rem; 
+    }
+    .userText {
+      .userName {
+        font-size: 1rem;
+        margin: 0 0 0.25rem 0;
+        margin-bottom: 0.5rem; 
+      }
+      .userDesc {
+        font-size: 0.85rem;
+        color: $text-muted;
+        margin: 0;
+        margin-bottom: 0.5rem; 
+      }
+    }
+  }
+  .userStatsGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    .statItem {
+      .statNumber {
+        display: block;
+        font-size: 0.9rem;
+        font-weight: bold;
+        margin-bottom: 0.15rem;
+      }
+      .statLabel {
+        font-size: 0.75rem;
+        color: $text-muted;
+      }
+    }
+  }
+  .shareBtn {
+    width: 100%;
+    padding: 0.5rem;
+    background-color: $accent;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: #fff;
+  }
+}

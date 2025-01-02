@@ -18,6 +18,10 @@ import Register from "@/pages/Register/Register";
 import Post from "@/pages/Post/Post";
 import Update from "@/pages/Update/Update";
 
+import ProfileLayout from "@/pages/MyPageProfile/ProfileLayout";
+import AccountLayout from "@/pages/MyPageAccount/AccountLayout";
+
+
 /**
  * router 파일은 어떤 주소에 어떤 pages/[filename].tsx가 띄워질지 정하는 파일입니다.
  */
@@ -97,6 +101,13 @@ const router = createBrowserRouter([
         element: <Callback />,
       },
     ],
+  },
+  {
+    path: "/profile",
+    element: <ProfileLayout />,
+  },  {
+    path: "/account",
+    element: <AccountLayout />,
   },
   {
     path: "/email/verify",
