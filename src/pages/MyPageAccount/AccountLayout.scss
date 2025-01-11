@@ -18,9 +18,9 @@ body {
   width: 100%;
   min-height: calc(100vh - 60px);
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  // justify-content: center;
   background-color: $bg-dark;
+  padding-left: 11%;
 }
 
 .accountInner {

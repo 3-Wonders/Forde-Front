@@ -1,0 +1,57 @@
+$bg-dark: #1E252B;
+$bg-darker: #262D34;
+$accent: #ff7b00;
+$text: #fff;
+$text-muted: #ccc;
+$delete-red: #FF4E4E;
+
+.layout {
+    display: flex;
+    max-width: $center-width;
+    margin: 2rem auto 4rem;
+    // justify-content: center;
+    align-items: flex-start;
+  
+    .main {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      flex-grow: 1;
+      flex-shrink: 1;
+      max-width: 55.5%;
+      min-width: 0;
+    }
+  
+    .left,
+    .right {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+  
+    .left {
+      width: 15rem;
+    }
+    .right {
+      width: 20.3125rem;
+    }
+  }
+  
+  @include main-layout-breakpoint {
+    .layout {
+      flex-direction: column;
+      margin: 0.625rem 0.9375rem;
+  
+      .main {
+        order: 2;
+      }
+  
+      .left,
+      .right {
+        order: 1;
+        width: 100%;
+      }
+    }
+  }
+  

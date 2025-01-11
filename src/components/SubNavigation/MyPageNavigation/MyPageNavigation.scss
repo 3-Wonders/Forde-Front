@@ -1,0 +1,52 @@
+$bg-dark: #1E252B;
+$bg-more-dark: #262D34;
+$accent: #ff7b00;
+$text: #fff;
+$text-muted: #ccc;
+
+$delete-red: #FF4E4E; 
+$checked-orange: #FF4401;
+
+.leftCard {
+  background-color: $bg-more-dark;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.leftCard {
+  width: 200px;
+
+  .cardTitle {
+    margin: 0 0 1rem 0;
+    font-size: 1.1rem;
+    font-weight: bold;
+  }
+
+  .menuList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      padding: 0.75rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+
+      i {
+        font-size: 1rem;
+      }
+
+      &:hover {
+        color: $accent;
+      }
+
+      &.active {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+        padding-left: 0.5rem;
+      }
+    }
+  }
+}

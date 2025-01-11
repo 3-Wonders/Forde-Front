@@ -20,7 +20,9 @@ import Update from "@/pages/Update/Update";
 
 import ProfileLayout from "@/pages/MyPageProfile/ProfileLayout";
 import AccountLayout from "@/pages/MyPageAccount/AccountLayout";
-
+import SocialLayout from "@/pages/Social/SocialLayout";
+import NoticeLayout from "@/pages/Notice/NoticeLayout"
+import ActivateLayout from "@/pages/MyPageActive/ActiveLayout";
 
 /**
  * router 파일은 어떤 주소에 어떤 pages/[filename].tsx가 띄워질지 정하는 파일입니다.
@@ -105,9 +107,22 @@ const router = createBrowserRouter([
   {
     path: "/profile",
     element: <ProfileLayout />,
-  },  {
+  },  
+  {
     path: "/account",
     element: <AccountLayout />,
+  },
+  {
+    path: "/social",
+    element: <SocialLayout />,
+  },
+  {
+    path: "/notice",
+    element: <NoticeLayout />,
+  },
+  {
+    path: "/activate",
+    element: <ActivateLayout />,
   },
   {
     path: "/email/verify",
