@@ -1,0 +1,132 @@
+$bg-dark: #1E252B;
+$bg-darker: #262D34;
+$accent: #ff7b00;
+$text: #fff;
+$text-muted: #ccc;
+$delete-red: #FF4E4E;
+
+.layout {
+    display: flex;
+    max-width: $center-width;
+    margin: 2rem auto 4rem;
+    // justify-content: center;
+    align-items: flex-start;
+  
+    .main {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      flex-grow: 1;
+      flex-shrink: 1;
+      max-width: 55.5%;
+      min-width: 0;
+    }
+  
+    .left,
+    .right {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+  
+    .left {
+      width: 15rem;
+    }
+    .right {
+      width: 20.3125rem;
+    }
+    
+    .profileRightCard {
+      width: 20.3125rem;
+      background-color: $bg-darker;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-left: 1rem;
+      .userHeader {
+        // display: flex;
+        // align-items: center;    
+        text-align: left; 
+        gap: 1rem;
+        margin-top: 1rem;
+        
+        margin-bottom: 1rem;
+        .userThumb {
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
+          object-fit: cover;
+          flex-shrink: 0;
+          margin-bottom: 0.5rem; 
+        }
+        .userText {
+          .userName {
+            font-size: 1rem;
+            margin: 0 0 0.25rem 0;
+            margin-bottom: 0.5rem; 
+          }
+          .userDesc {
+            font-size: 0.85rem;
+            color: $text-muted;
+            margin: 0;
+            margin-bottom: 0.5rem; 
+          }
+        }
+      }
+      .userStatsGrid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem 1rem;
+        margin-bottom: 1rem;
+        .statItem {
+          .statNumber {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-bottom: 0.15rem;
+          }
+          .statLabel {
+            font-size: 0.75rem;
+            color: $text-muted;
+          }
+        }
+      }
+      .followBtn {
+        width: 100%;
+        padding: 0.5rem;
+        background-color: $accent;
+        border: none;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        color: #fff;
+      }
+      .followingBtn {
+        width: 100%;
+        padding: 0.5rem;
+        background-color: $bg-dark;
+        border: none;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        color: #fff;
+      }
+    }
+  }
+  
+@include main-layout-breakpoint {
+  .layout {
+    flex-direction: column;
+    margin: 0.625rem 0.9375rem;
+
+    .main {
+      order: 2;
+    }
+
+    .left,
+    .right {
+      order: 1;
+      width: 100%;
+    }
+  }
+}
