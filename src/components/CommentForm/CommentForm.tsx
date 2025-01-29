@@ -8,6 +8,7 @@ import FormButton from "../FormButton/ForumButton";
 import useToast from "@/hooks/useToast";
 import useUser from "@/hooks/useUser";
 import Editor from "../Editor/Editor";
+import MentionEditor from "../MentionEditor/MentionEditor";
 
 type CommentFormProps = {
   initialContent?: string;
@@ -49,6 +50,7 @@ const CommentForm = ({ initialContent = "", className, onSubmit }: CommentFormPr
   return (
     <form onSubmit={handleSubmit} className={`${classes.form} ${className}`}>
       {ToastElement}
+      <MentionEditor></MentionEditor>
       <Editor initialValue={content} onChange={handleChange} isVisibleToolbar={false} placeholder="댓글" />
       <FormButton text="댓글 쓰기" isDisabled={isDisabled} />
     </form>

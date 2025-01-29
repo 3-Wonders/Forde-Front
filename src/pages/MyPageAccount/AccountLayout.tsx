@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import useWindowSize from "@/hooks/useWindowSize";
 import DesktopHeader from "@/components/Header/DesktopHeader/DesktopHeader";
 import MobileHeader from "@/components/Header/MobileHeader/MobileHeader";
@@ -9,6 +9,8 @@ import GoogleIcon from "@/assets/google-color.svg";
 import NaverIcon from "@/assets/naver.svg";
 import KakaoIcon from "@/assets/kakao.svg";
 
+import { UserApi } from "@/api/user";
+
 const AccountLayout = () => {
   const tabletSize = 992;
   const { width } = useWindowSize();
@@ -16,6 +18,84 @@ const AccountLayout = () => {
   const header = useMemo(() => {
     return width > tabletSize ? <DesktopHeader /> : <MobileHeader />;
   }, [width, tabletSize]);
+
+  const [email, setEmail] = useState("");
+  const [socialLinks, setSocialLinks] = useState<Record<string, boolean>>({});
+
+
+  const [newEmail, setNewEmail] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [agreed, setAgreed] = useState(false);
+  
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const userData = await UserApi.getIntroUser();
+        const userSnsData = await UserApi.getSnsInfos();
+        setEmail(userData.email);
+        const links: Record<string, boolean> = {};
+        for (const sns of userSnsData.snsInfos) {
+          links[sns.snsName] = sns.isConnect;
+        }
+  
+        setSocialLinks(links);
+      } catch (error) {
+        console.error("사용자 정보를 불러오는 중 오류 발생", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  const handleEmailChange = async () => {
+    try {
+      // await updateEmail(newEmail);
+      alert("이메일이 변경되었습니다.");
+      setEmail(newEmail);
+      setNewEmail("");
+    } catch (error) {
+      alert("이메일 변경 실패 :: "+error);
+    }
+  };
+
+  const handleSocialLink = async (snsName: string) => {
+    try {
+      const { snsKind, isConnect } = socialLinks[snsName];
+  
+      if (isConnect) {
+        // await unlinkSocialAccount(snsKind);
+        alert(`${snsName} (${snsKind}) 연동 해제`);
+      } else {
+        // await linkSocialAccount(snsKind);
+        alert(`${snsName} (${snsKind}) 연동 완료`);
+      }
+  
+      // setSocialLinks((prev) => ({
+      //   ...prev,
+      //   [snsName]: { ...prev[snsName], isConnect: !isConnect },
+      // }));
+    } catch (error) {
+      alert(`${snsName} 연동 처리 중 오류 :: ` + error);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!agreed) {
+      alert("계정 삭제에 동의해야 합니다.");
+      return;
+    }
+
+    try {
+      setIsDeleting(true);
+      // await deleteAccount();
+      alert("계정이 삭제되었습니다.");
+      // 로그아웃 또는 리디렉션 처리
+    } catch (error) {
+      alert("계정 삭제 실패 :: " + error);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   return (
     <>
@@ -42,55 +122,34 @@ const AccountLayout = () => {
               <input
                 id="emailInput"
                 type="text"
-                defaultValue="User02@naver.com"
-                placeholder="이메일 주소"
+                value={newEmail}
+                onChange={(e) => setNewEmail(e.target.value)}
+                placeholder={email || "이메일 주소"}
               />
-              <button className="btnChange">이메일 변경</button>
-            </div>
-
+              <button className="btnChange" onClick={handleEmailChange}>이메일 변경</button>
+              </div>
+            
             <div className="sectionHeader">소셜계정 연동</div>
             <div className="socialGroup">
               <ul className="socialList">
-                <li className="github">
-                  <div className="socialItem">
-                    <img
-                      src={GithubIcon}
-                      alt="Github"
-                    />
-                    <span>Github</span>
-                  </div>
-                  <button className="btnSocial connect">연동</button>
-                </li>
-                <li className="google">
-                  <div className="socialItem">
-                    <img
-                      src={GoogleIcon}
-                      alt="Google"
-                    />
-                    <span>Google</span>
-                  </div>
-                  <button className="btnSocial disconnect">연동 해제</button>
-                </li>
-                <li className="naver">
-                  <div className="socialItem">
-                    <img
-                      src={NaverIcon}
-                      alt="Naver"
-                    />
-                    <span>Naver</span>
-                  </div>
-                  <button className="btnSocial connect">연동</button>
-                </li>
-                <li className="kakao">
-                  <div className="socialItem">
-                    <img
-                      src={KakaoIcon}
-                      alt="Kakao"
-                    />
-                    <span>Kakao</span>
-                  </div>
-                  <button className="btnSocial connect">연동</button>
-                </li>
+                {["github", "google", "naver", "kakao"].map((provider) => (
+                  <li key={provider} className={provider}>
+                    <div className="socialItem">
+                      <img src={
+                        provider === "github" ? GithubIcon :
+                        provider === "google" ? GoogleIcon :
+                        provider === "naver" ? NaverIcon : KakaoIcon
+                      } alt={provider} />
+                      <span>{provider.charAt(0).toUpperCase() + provider.slice(1)}</span>
+                    </div>
+                    <button
+                      className={`btnSocial ${socialLinks[provider] ? "disconnect" : "connect"}`}
+                      onClick={() => handleSocialLink(provider)}
+                    >
+                      {socialLinks[provider] ? "연동 해제" : "연동"}
+                    </button>
+                  </li>
+                ))}
               </ul>
             </div>
 
@@ -102,10 +161,16 @@ const AccountLayout = () => {
                 작성된 게시물은 삭제되지 않으며, 익명으로 처리 후 Forde 소유가 됩니다.
               </p>
               <label className="agreeLabel">
-                <input type="checkbox" />
-                계정 삭제에 관한 절차를 읽었으며, 이에 동의 합니 다.
+                <input
+                  type="checkbox"
+                  checked={agreed}
+                  onChange={(e) => setAgreed(e.target.checked)}
+                />
+                계정 삭제에 관한 절차를 읽었으며, 이에 동의합니다.
               </label>
-              <button className="btnDelete">계정 삭제</button>
+              <button className="btnDelete" onClick={handleDeleteAccount} disabled={isDeleting}>
+                {isDeleting ? "삭제 중..." : "계정 삭제"}
+              </button>
             </div>
           </div>
         </div>
