@@ -11,18 +11,16 @@ import InputLayout from "@/layouts/Input/InputLayout";
 
 import FormButton from "@/components/FormButton/FormButton";
 
-import { validationEmail, validationPassword } from "@/utils/validation";
+import { validationPassword } from "@/utils/validation";
 
-type InputKey = "email" | "password" | "passwordCheck";
+import Cookies from "js-cookie";
+import { UserApi } from "@/api/user";
+
+type InputKey = "password" | "passwordCheck";
 
 const PasswordEdit = () => {
 
   const [formData, setFormData] = useState<InputDataSet<InputKey, string>>({
-    email: {
-      value: "",
-      isError: false,
-      errorMessage: "올바른 이메일 형식이 아닙니다.",
-    },
     password: {
       value: "",
       isError: false,
@@ -39,34 +37,19 @@ const PasswordEdit = () => {
   const isDisabled = useMemo(() => {
     return (
       isInitinal ||
-      formData.email.isError ||
       formData.password.isError ||
       formData.passwordCheck.isError ||
-      formData.email.value === "" ||
       formData.password.value === "" ||
       formData.passwordCheck.value === ""
     );
   }, [
     isInitinal,
-    formData.email.isError,
-    formData.email.value,
     formData.password.isError,
     formData.password.value,
     formData.passwordCheck.isError,
     formData.passwordCheck.value,
   ]);
 
-  const checkValidationEmail = useCallback((email: string) => {
-    const isValidate = validationEmail(email);
-
-    setFormData((prev) => ({
-      ...prev,
-      email: {
-        ...prev.email,
-        isError: !isValidate,
-      },
-    }));
-  }, []);
 
   const checkValidationPassword = useCallback((password: string) => {
     const isValidate = validationPassword(password);
@@ -93,15 +76,12 @@ const PasswordEdit = () => {
       }));
 
       switch (key) {
-        case "email":
-          checkValidationEmail(event.target.value);
-          break;
         case "password":
           checkValidationPassword(event.target.value);
           break;
       }
     },
-    [isInitinal, checkValidationEmail, checkValidationPassword],
+    [isInitinal, checkValidationPassword],
   );
   const handleChangeCheck = useCallback(
     (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -133,7 +113,27 @@ const PasswordEdit = () => {
     [isInitinal],
   );
 
+  const handleButton = async (password: string, randomKey: string) => {
+    try {
+      const sessionKey = Cookies.get("sessionKey");
+      if (!sessionKey) {
+        console.error("세션 키 없음");
+        return;
+      }
 
+      const response = await UserApi.PatchPassword(sessionKey, { password: password, randomKey: randomKey });
+      
+      if (response.success) {
+        // 인증 성공 시 처리
+        alert("비밀번호가 변경 되었습니다.");
+      } else {
+        // 인증 실패
+        alert(response.message);
+      }
+    } catch (error) {
+      console.error("API 호출 실패:", error);
+    }
+  };
 
   return (
     <InputLayout title="비밀번호 변경" desc="비밀번호 변경을 위해 비밀번호를 입력해주세요.">
@@ -160,7 +160,7 @@ const PasswordEdit = () => {
             onChange={(event) => handleChangeCheck(event)}
           />
         </div>
-        <FormButton text="비밀번호 변경" width="70%" isDisabled={isDisabled} />
+        <FormButton text="비밀번호 변경" width="70%" isDisabled={isDisabled} onClick={() => handleButton(formData.password.value, "임의랜덤키")}/>
       </form>
     </InputLayout>
   );
