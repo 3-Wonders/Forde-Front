@@ -64,6 +64,10 @@ export interface PostVerifyResponse {
 export interface PostVerifyParams {
   email: string;
 }
+export interface PostVerifyCompareParams {
+  email: string;
+  verifyCode: string;
+}
 
 export interface PatchPasswordParams {
   password: string;

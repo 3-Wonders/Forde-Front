@@ -1,6 +1,7 @@
 import { Board, BoardListWithType, DraftBoardList, UpdateBoardDetail } from "@/types/board";
 
 import Bitcoin from "@assets/bitcoin.png";
+// import axios from "axios";
 
 export const BoardApi = {
   fetchRecentBoardAndNews: async ({ page, count }: { page: number; count: number }) => {
@@ -392,6 +393,19 @@ export const BoardApi = {
     return recentBoards;
   },
   fetchRecommendBoards: async () => {
+    
+    // try { 주석 풀어서 테스트해야함.
+    //   const response = await axios.get(
+    //     `http://localhost:8081/news/recommended`,  
+    //     {
+    //       withCredentials: true
+    //     }
+    //   );
+    //   return response.data;
+    // } catch (error) {
+    //   console.error("추천 게시글을 가져오던 중 오류 발생:", error);
+    //   throw error;
+    // }
     return {
       boards: [
         {
@@ -434,6 +448,19 @@ export const BoardApi = {
     };
   },
   fetchPopularBoards: async () => {
+    
+    // try { 주석 풀어서 테스트해야함.
+    //   const response = await axios.get(
+    //     `http://localhost:8081/board/popular`,  
+    //     {
+    //       withCredentials: true
+    //     }
+    //   );
+    //   return response.data;
+    // } catch (error) {
+    //   console.error("추천 게시글을 가져오던 중 오류 발생:", error);
+    //   throw error;
+    // }
     return {
       boards: [
         {

@@ -1,4 +1,4 @@
-import { IntroUser, OtherUser, SnsInfos, User, Notification, PostVerifyParams, PostVerifyResponse, PatchPasswordParams } from "@/types/user";
+import { IntroUser, OtherUser, SnsInfos, User, Notification, PostVerifyParams, PostVerifyResponse, PatchPasswordParams, PostVerifyCompareParams } from "@/types/user";
 import axios from "axios";
 
 export const UserApi = {
@@ -210,11 +210,31 @@ export const UserApi = {
       throw error;
     }
   },
-  PostVerify: async (sessionKey:string, { email }: PostVerifyParams): Promise<PostVerifyResponse> => {
+  postVerify: async (sessionKey:string, { email }: PostVerifyParams): Promise<PostVerifyResponse> => {
     try {
       const response = await axios.post(`localhost:8081/user/verify`, 
         { 
           email:email // body임 
+        },
+        {
+          headers: { Authorization: `Bearer ${sessionKey}` }
+        }
+      );
+
+      // 응답 데이터 형식이 success와 message를 포함한다고 가정
+      return response.data;
+    } catch (error) {
+      if( error instanceof Error)
+        throw new Error(error.message || "API 요청 실패");
+      throw new Error("API 요청 실패");
+    }
+  },
+  postVerifyCompare: async (sessionKey:string, {email, verifyCode}: PostVerifyCompareParams): Promise<void> => {
+    try {
+      const response = await axios.post(`localhost:8081/user/verify`, 
+        { 
+          email:email,
+          verifyCode: verifyCode
         },
         {
           headers: { Authorization: `Bearer ${sessionKey}` }
@@ -249,7 +269,6 @@ export const UserApi = {
       throw new Error("API 요청 실패");
     }
   },
-  
   logout: async () => {
     console.log("logout");
   },

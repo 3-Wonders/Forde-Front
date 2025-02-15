@@ -83,7 +83,7 @@ const PasswordFind = () => {
         return;
       }
 
-      const response = await UserApi.PostVerify(sessionKey, { email: formData.email.value });
+      const response = await UserApi.postVerify(sessionKey, { email: formData.email.value });
       
       if (response.success) {
         // 인증 성공 시 처리
