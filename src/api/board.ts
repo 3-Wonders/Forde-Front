@@ -1,11 +1,26 @@
 import { Board, BoardListWithType, DraftBoardList, UpdateBoardDetail } from "@/types/board";
 
 import Bitcoin from "@assets/bitcoin.png";
+import axios from "axios";
 // import axios from "axios";
 
 export const BoardApi = {
   fetchRecentBoardAndNews: async ({ page, count }: { page: number; count: number }) => {
     console.log(page, count);
+
+    
+    // try { 
+    //   const response = await axios.post(
+    //     `http://localhost:8081/recent`,  
+    //     {
+    //       withCredentials: true
+    //     }
+    //   );
+    //   return response.data;
+    // } catch (error) {
+    //   console.error("이것 저것 가져오던 중 오류 발생:", error);
+    //   throw error;
+    // }
 
     // TODO: 최근 뉴스 또는 게시글 목록을 불러오는 API 호출
     const recentBoards: BoardListWithType = {
@@ -104,7 +119,21 @@ export const BoardApi = {
   fetchRecentNews: async ({ page, count }: { page: number; count: number }) => {
     console.log(page, count);
 
-    // TODO: 최근 뉴스를 불러오는 API 호출
+    // try { 
+    //   const response = await axios.get(
+    //     `http://localhost:8081/news`,  
+    //     {
+    //       params: { page, count },
+    //       withCredentials: true
+    //     }
+    //   );
+    //   return response.data;
+    // } catch (error) {
+    //   console.error("최신 뉴스를 가져오던 중 오류 발생:", error);
+    //   throw error;
+    // }
+
+    // TODO: 최근 뉴스를 불러오는 API 호출 
     const recentNews: BoardListWithType = {
       boards: [
         {
@@ -200,6 +229,21 @@ export const BoardApi = {
   },
   fetchRecentBoards: async ({ page, count }: { page: number; count: number }) => {
     console.log(page, count);
+
+
+    // try { 
+    //   const response = await axios.get(
+    //     `http://localhost:8081/board`,  
+    //     {
+    //       params: { page, count },
+    //       withCredentials: true
+    //     }
+    //   );
+    //   return response.data;
+    // } catch (error) {
+    //   console.error("최신 게시글를 가져오던 중 오류 발생:", error);
+    //   throw error;
+    // }
 
     // TODO: 최근 게시글 목록을 불러오는 API 호출
     const recentBoards: BoardListWithType = {
@@ -297,6 +341,20 @@ export const BoardApi = {
   },
   fetchRecentFollowingBoards: async ({ page, count }: { page: number; count: number }) => {
     console.log(page, count);
+
+    // try { 
+    //   const response = await axios.get(
+    //     `http://localhost:8081/board/following`,  
+    //     {
+    //       params: { page, count },
+    //       withCredentials: true
+    //     }
+    //   );
+    //   return response.data;
+    // } catch (error) {
+    //   console.error("최신 게시글를 가져오던 중 오류 발생:", error);
+    //   throw error;
+    // }
 
     // TODO: 팔로잉 게시글 또는 뉴스 목록을 불러오는 API 호출
     const recentBoards: BoardListWithType = {
@@ -505,6 +563,18 @@ export const BoardApi = {
   fetchBoardDetail: async (boardId: number): Promise<Board> => {
     console.log("fetch Board Detail : ", boardId);
 
+    // try { 
+    //   const response = await axios.get(
+    //     `http://localhost:8081/board/`+boardId,  
+    //     {
+    //       withCredentials: true
+    //     }
+    //   );
+    //   return response.data;
+    // } catch (error) {
+    //   console.error("특정 게시글을 가져오던 중 오류 발생:", error);
+    //   throw error;
+    // }
     return {
       boardId: 1,
       boardType: "N",
@@ -542,7 +612,18 @@ public class Main {
   },
   fetchBoardDetailByUpdate: async (boardId: number): Promise<UpdateBoardDetail> => {
     console.log("fetch Board Detail : ", boardId);
-
+    // try { 
+    //   const response = await axios.patch(
+    //     `http://localhost:8081/board/`+boardId,  
+    //     {
+    //       withCredentials: true
+    //     }
+    //   );
+    //   return response.data;
+    // } catch (error) {
+    //   console.error("특정 게시글을 업데이트 하던 중 오류 발생:", error);
+    //   throw error;
+    // }
     return {
       boardId: 1,
       boardType: "N",
@@ -573,6 +654,19 @@ public class Main {
     };
   },
   fetchDraftBoards: async (): Promise<DraftBoardList> => {
+    
+    // try { 
+    //   const response = await axios.post(
+    //     `http://localhost:8081/draft,  
+    //     {
+    //       withCredentials: true
+    //     }
+    //   );
+    //   return response.data;
+    // } catch (error) {
+    //   console.error("특정 게시글을 임시저장 중 오류 발생:", error);
+    //   throw error;
+    // }
     return {
       drafts: [
         {
@@ -620,8 +714,34 @@ public class Main {
   },
   likeBoard: async (boardId: number) => {
     console.log("like", boardId);
+    
+    // try { 
+    //   const response = await axios.post(
+    //     `http://localhost:8081/board/`+boardId+`/like`,  
+    //     {
+    //       withCredentials: true
+    //     }
+    //   );
+    //   return response.data;
+    // } catch (error) {
+    //   console.error("특정 게시글을 가져오던 중 오류 발생:", error);
+    //   throw error;
+    // }
   },
   unLikeBoard: async (boardId: number) => {
     console.log("unlike", boardId);
+    
+    // try { 
+    //   const response = await axios.delete(
+    //     `http://localhost:8081/board/`+boardId+`/like`,  
+    //     {
+    //       withCredentials: true
+    //     }
+    //   );
+    //   return response.data;
+    // } catch (error) {
+    //   console.error("특정 게시글을 가져오던 중 오류 발생:", error);
+    //   throw error;
+    // }
   },
 };

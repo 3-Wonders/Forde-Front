@@ -1,8 +1,20 @@
-import { IntroUser, OtherUser, SnsInfos, User, Notification, PostVerifyParams, PostVerifyResponse, PatchPasswordParams, PostVerifyCompareParams } from "@/types/user";
+import { IntroUser, OtherUser, SnsInfos, User, Notification, PostVerifyParams, PostVerifyResponse, PatchPasswordParams, PostVerifyCompareParams, PostLoginParams } from "@/types/user";
 import axios from "axios";
 
 export const UserApi = {
   getUser: async (): Promise<User> => {
+    // try { 
+    //   const response = await axios.get(
+    //     `http://localhost:8081/user`,  
+    //     {
+    //       withCredentials: true
+    //     }
+    //   );
+    //   return response.data;
+    // } catch (error) {
+    //   console.error("유저 정보 가져오던 중 오류 발생:", error);
+    //   throw error;
+    // }
     return {
       userId: 2,
       nickname: "응우옌성빈",
@@ -24,7 +36,19 @@ export const UserApi = {
       commentCount: 5555,
     };
   },
-  getOneUser: async (): Promise<OtherUser> => {
+  getOneUser: async (userId : number): Promise<OtherUser> => {
+    // try { 
+    //   const response = await axios.get(
+    //     `http://localhost:8081/user/`+userId,  
+    //     {
+    //       withCredentials: true
+    //     }
+    //   );
+    //   return response.data;
+    // } catch (error) {
+    //   console.error("유저 정보 가져오던 중 오류 발생:", error);
+    //   throw error;
+    // }
     return {
       userId: 2,
       nickname: "응우옌성빈",
@@ -41,6 +65,18 @@ export const UserApi = {
   },
   getIntroUser: async (): Promise<IntroUser> => {
     // throw new Error("Unauthorized Error");
+    // try { 
+    //   const response = await axios.get(
+    //     `http://localhost:8081/user/intro`,  
+    //     {
+    //       withCredentials: true
+    //     }
+    //   );
+    //   return response.data;
+    // } catch (error) {
+    //   console.error("유저 정보 가져오던 중 오류 발생:", error);
+    //   throw error;
+    // }
     return {
       userId: 2,
       nickname: "김승용",
@@ -49,6 +85,18 @@ export const UserApi = {
     };
   },
   getSnsInfos: async (): Promise<SnsInfos> => {
+    // try { 
+    //   const response = await axios.get(
+    //     `http://localhost:8081/user/sns`,  
+    //     {
+    //       withCredentials: true
+    //     }
+    //   );
+    //   return response.data;
+    // } catch (error) {
+    //   console.error("유저 정보 가져오던 중 오류 발생:", error);
+    //   throw error;
+    // }
     return {
       userId: 2,
       email: "seungyong20@naver.com",
@@ -83,7 +131,10 @@ export const UserApi = {
     interestTags: string[];
   }) => {
     try {
-      const response = await axios.patch(`localhost:8081/user`, userData);
+      const response = await axios.patch(`localhost:8081/user`, userData,
+          {
+            withCredentials: true
+          });
       return response.data;
     } catch (error) {
       console.error("사용자 정보 업데이트 중 오류 발생:", error);
@@ -269,7 +320,36 @@ export const UserApi = {
       throw new Error("API 요청 실패");
     }
   },
+  
+  login: async ({email, password}: PostLoginParams): Promise<void> => {
+    try {
+      const response = await axios.post(`localhost:8081/user/login`, 
+        { 
+          email:email,
+          password: password
+        },
+        {withCredentials: true}
+      );
+
+      // 응답 데이터 형식이 success와 message를 포함한다고 가정
+      return response.data;
+    } catch (error) {
+      if( error instanceof Error)
+        throw new Error(error.message || "API 요청 실패");
+      throw new Error("API 요청 실패");
+    }
+  },
   logout: async () => {
-    console.log("logout");
+    try {
+      const response = await axios.post(`localhost:8081/user/logout`, 
+        {withCredentials: true}
+      );
+
+      return response.data;
+    } catch (error) {
+      if( error instanceof Error)
+        throw new Error(error.message || "API 요청 실패");
+      throw new Error("API 요청 실패");
+    }
   },
 };

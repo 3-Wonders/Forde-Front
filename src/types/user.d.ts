@@ -69,6 +69,11 @@ export interface PostVerifyCompareParams {
   verifyCode: string;
 }
 
+export interface PostLoginParams {
+  email: string;
+  password: string;
+}
+
 export interface PatchPasswordParams {
   password: string;
   randomKey: string;

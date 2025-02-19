@@ -21,6 +21,8 @@ import FormButton from "@/components/FormButton/FormButton";
 
 import { validationEmail, validationPassword } from "@/utils/validation";
 
+import { UserApi } from "@/api/user";
+
 type InputKey = "email" | "password";
 
 const Login = () => {
@@ -112,6 +114,9 @@ const Login = () => {
 
       // TODO: 로그인 API 호출
       console.table(formData);
+      UserApi.login({email:formData.email.value, password:formData.password.value});
+
+
 
       const params = new URLSearchParams(location.search);
       if (params.get("redirect")) {
