@@ -161,3 +161,24 @@
     cursor: col-resize;
   }
 }
+
+code {
+  background-color: #faf2f4;
+  border-radius: 4px;
+  opacity: 85%;
+  color: #c1798b;
+  letter-spacing: -.3px;
+  padding: 2px 3px;
+  font-family: monospace, monospace;
+  font-size: 0.8em;
+}
+
+pre code {
+  background-color: inherit;
+  border-radius: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  padding: inherit;
+  font-family: inherit;
+  font-size: inherit;
+}
