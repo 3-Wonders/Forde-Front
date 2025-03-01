@@ -737,20 +737,29 @@ activityFile.text = """
       createdTime: "2024-08-17 12:30:45",
     };
   },
-  fetchBoardDetailByUpdate: async (boardId: number): Promise<UpdateBoardDetail> => {
+  fetchBoardDetailByUpdate: async (boardId: number, updateData: UpdateBoardDetail, thumbnailAction: string): Promise<UpdateBoardDetail> => {
     console.log("fetch Board Detail : ", boardId);
-    // try { 
-    //   const response = await axios.patch(
-    //     `http://localhost:8081/board/`+boardId,  
-    //     {
-    //       withCredentials: true
-    //     }
-    //   );
-    //   return response.data;
-    // } catch (error) {
-    //   console.error("특정 게시글을 업데이트 하던 중 오류 발생:", error);
-    //   throw error;
-    // }
+    try { 
+      const response = await axios.patch(
+        `http://localhost:8081/board/`+boardId, 
+        {
+          boardType: updateData.boardType,
+          title: updateData.title,
+          content: updateData.content,
+          tagIds: updateData.tags,
+          thumbnail: updateData.thumbnail,
+          thumbnailAction: thumbnailAction,
+          imageIds: updateData.imageIds
+        },
+        {
+          withCredentials: true
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("특정 게시글을 업데이트 하던 중 오류 발생:", error);
+      throw error;
+    }
     return {
       boardId: 1,
       boardType: "N",
@@ -870,5 +879,21 @@ public class Main {
     //   console.error("특정 게시글을 가져오던 중 오류 발생:", error);
     //   throw error;
     // }
+  },
+  fetchBoardDetailByDelete: async (boardId: number) => {
+    console.log("delete", boardId);
+    
+    try { 
+      const response = await axios.delete(
+        `http://localhost:8081/board/`+boardId,  
+        {
+          withCredentials: true
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("특정 게시글을 삭제하던 중 오류 발생:", error);
+      throw error;
+    }
   },
 };

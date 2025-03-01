@@ -37,7 +37,19 @@ const PostForm = ({ postSuccess, onPost, boardId }: PostFormProps) => {
     queryKey: ["board", boardId],
     initialData: null,
     queryFn: async () => {
-      return await BoardApi.fetchBoardDetailByUpdate(boardId!);
+      return await BoardApi.fetchBoardDetailByUpdate(boardId!,
+        {
+          boardType: request.boardType,
+          title: request.title,
+          content: request.content,
+          tags: request.tags || [],
+          thumbnail: "ss",
+          imageIds: request.imageIds!,
+          boardId: boardId!,
+          createdTime: ""
+        },
+        "KEEP"
+      );
     },
     enabled: !!boardId,
   });

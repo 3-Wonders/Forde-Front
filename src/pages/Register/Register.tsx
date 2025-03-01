@@ -23,6 +23,8 @@ import FormButton from "@/components/FormButton/FormButton";
 
 import { validationEmail, validationPassword } from "@/utils/validation";
 
+import { UserApi } from "@/api/user";
+
 type InputKey = "email" | "password" | "passwordConfirm" | "nickname";
 
 const Register = () => {
@@ -196,6 +198,16 @@ const Register = () => {
       if (!isAgreeTerms) {
         return;
       }
+
+      // 여기서 회원가입 요청 보내기
+      UserApi.postUser(
+        {
+          email:formData.email.value, 
+          password:formData.password.value, 
+          isEnableEvent:isAgreeEvent, 
+          isEnableNotification:isAgreeNotification
+        }
+      );
 
       console.table({ ...formData, isAgreeTerms, isAgreeNotification, isAgreeEvent });
     },

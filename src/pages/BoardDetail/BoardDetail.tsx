@@ -21,6 +21,7 @@ import SkeletonBoardDetail from "@/components/Skeleton/BoardDetail/SkeletonBoard
 import useUser from "@/hooks/useUser";
 
 import { convertToUnit, getTimeAgo } from "@/utils/number";
+import { UserApi } from "@/api/user";
 
 const BoardDetail = () => {
   const { user } = useUser();
@@ -42,9 +43,26 @@ const BoardDetail = () => {
     }
   }, [boardId]);
 
+  const handleUpdate = useCallback(async () => {
+    try {
+      BoardApi.fetchBoardDetailByDelete(boardId);
+    } catch (error) {
+      console.error(error);
+    }
+  }, [boardId]);
+
+  const handleDelete = useCallback(async () => {
+    try {
+      BoardApi.fetchBoardDetailByDelete(boardId);
+    } catch (error) {
+      console.error(error);
+    }
+  }, [boardId]);
+
   useEffect(() => {
     fetchBoardDetail();
   }, [fetchBoardDetail]);
+
 
   return (
     <>
@@ -72,8 +90,8 @@ const BoardDetail = () => {
               </div>
               {user?.userId === board.uploader.userId && (
                 <div className={classes.btnBox}>
-                  <button className={classes.update}>글 수정</button>
-                  <button className={classes.delete}>글 삭제</button>
+                  <button className={classes.update} onClick={handleUpdate}>글 수정</button>
+                  <button className={classes.delete} onClick={handleDelete}>글 삭제</button>
                 </div>
               )}
             </div>

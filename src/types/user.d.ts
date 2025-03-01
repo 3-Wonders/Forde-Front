@@ -78,3 +78,10 @@ export interface PatchPasswordParams {
   password: string;
   randomKey: string;
 }
+
+export interface PostRegisterParams {
+  email: string;
+  password: string;
+  isEnableNotification: boolean;
+  isEnableEvent: boolean;
+}

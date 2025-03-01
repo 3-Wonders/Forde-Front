@@ -1,4 +1,4 @@
-import { IntroUser, OtherUser, SnsInfos, User, Notification, PostVerifyParams, PostVerifyResponse, PatchPasswordParams, PostVerifyCompareParams, PostLoginParams } from "@/types/user";
+import { IntroUser, OtherUser, SnsInfos, User, Notification, PostVerifyParams, PostVerifyResponse, PatchPasswordParams, PostVerifyCompareParams, PostLoginParams, PostRegisterParams } from "@/types/user";
 import axios from "axios";
 
 export const UserApi = {
@@ -350,6 +350,27 @@ export const UserApi = {
       if( error instanceof Error)
         throw new Error(error.message || "API 요청 실패");
       throw new Error("API 요청 실패");
+    }
+  },
+  postUser: async ({email, password, isEnableEvent, isEnableNotification}: PostRegisterParams): Promise<void> => {
+    try {
+      const response = await axios.post(`localhost:8081/user`, 
+        { 
+          email:email,
+          password: password,
+          isEnableEvent: isEnableEvent,
+          isEnableNotification: isEnableNotification,
+        },
+        {
+          withCredentials: true
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      if( error instanceof Error)
+        throw new Error(error.message || "회원강비 API 요청 실패");
+      throw new Error("회원가입 API 요청 실패");
     }
   },
 };
