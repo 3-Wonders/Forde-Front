@@ -25,7 +25,7 @@ import { checkAltValue } from "@/utils/doc";
 
 type PostFormProps = {
   postSuccess: boolean;
-  onPost: (request: RequestBoard) => void;
+  onPost: (request: RequestBoard, thumbnailAction?: string) => void;
   boardId?: number;
 };
 
@@ -35,21 +35,9 @@ const PostForm = ({ postSuccess, onPost, boardId }: PostFormProps) => {
   const { user, isLoaded } = useUser();
   const { data: board, isError } = useQuery<UpdateBoardDetail | null>({
     queryKey: ["board", boardId],
-    initialData: null,
+    initialData: null, 
     queryFn: async () => {
-      return await BoardApi.fetchBoardDetailByUpdate(boardId!,
-        {
-          boardType: request.boardType,
-          title: request.title,
-          content: request.content,
-          tags: request.tags || [],
-          thumbnail: "ss",
-          imageIds: request.imageIds!,
-          boardId: boardId!,
-          createdTime: ""
-        },
-        "KEEP"
-      );
+      return await BoardApi.fetchBoardDetailByUpdate(boardId!); // 여기서 가져와서 세팅
     },
     enabled: !!boardId,
   });
@@ -76,6 +64,8 @@ const PostForm = ({ postSuccess, onPost, boardId }: PostFormProps) => {
   }, [drafs]);
 
   const [isOpenDialog, setIsOpenDialog] = useState<boolean>(false);
+  const [thumbnailAction, setThumbnailAction] = useState<string>("KEEP");
+  const [originalThumbnail, setOriginalThumbnail] = useState<string | File | null>(null);
   const [request, setRequest] = useState<RequestBoard>({
     boardType: "N",
     title: "",
@@ -170,9 +160,9 @@ const PostForm = ({ postSuccess, onPost, boardId }: PostFormProps) => {
         return;
       }
 
-      onPost(request);
+      onPost(request, thumbnailAction);
     },
-    [user, request, showToast, onPost, navigate],
+    [user, request, thumbnailAction, showToast, onPost, navigate],
   );
 
   const handleChange = useCallback(
@@ -181,8 +171,17 @@ const PostForm = ({ postSuccess, onPost, boardId }: PostFormProps) => {
         ...prev,
         [key]: value,
       }));
+
+      // thumbnail이 변경된 경우 thumbnailAction 업데이트
+      if (key === 'thumbnail') {
+        if (value === null && originalThumbnail !== null) {
+          setThumbnailAction("DELETE");
+        } else if (value instanceof File) {
+          setThumbnailAction("UPLOAD");
+        }
+      }
     },
-    [],
+    [originalThumbnail],
   );
 
   const handleTags = useCallback((tags: Tag[]) => {
@@ -221,11 +220,11 @@ const PostForm = ({ postSuccess, onPost, boardId }: PostFormProps) => {
       handleImage();
       handleChange("content", content);
     },
-    [handleChange],
+    [handleChange, handleImage],
   );
 
   useEffect(() => {
-    if (isLoaded && board) {
+    if (isLoaded && board) { // 데이터가 바뀔때마다 새로이 저장
       setRequest({
         boardType: board.boardType,
         title: board.title,
@@ -235,6 +234,8 @@ const PostForm = ({ postSuccess, onPost, boardId }: PostFormProps) => {
         tags: board.tags,
       });
 
+      // 원본 썸네일 저장
+      setOriginalThumbnail(board.thumbnail);
       setChangeContent(board.content);
     }
   }, [board, isLoaded]);

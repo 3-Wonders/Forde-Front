@@ -1,4 +1,4 @@
-import { IntroUser, OtherUser, SnsInfos, User, Notification, PostVerifyParams, PostVerifyResponse, PatchPasswordParams, PostVerifyCompareParams, PostLoginParams, PostRegisterParams } from "@/types/user";
+import { IntroUser, OtherUser, SnsInfos, User, Notification, PostVerifyParams, PostVerifyResponse, PatchPasswordParams, PostVerifyCompareParams, PostLoginParams, PostRegisterParams, UserNotificationResponse } from "@/types/user";
 import axios from "axios";
 
 export const UserApi = {
@@ -141,49 +141,21 @@ export const UserApi = {
       throw error;
     }
   },
-  getNotification: async (sessionKey:string): Promise<Notification[]> => {
-    console.log(sessionKey);
-    return [
-      {
-        notificationId: 1,
-        title: "공지사항",
-        description: "공지사항 알림을 받겠습니다.",
-        isEnabled: true
-      },
-      {
-        notificationId: 2,
-        title: "댓글",
-        description: "내가 쓴 글에 작성되는 댓글 알림을 받겠습니다.",
-        isEnabled: true
-      },
-      {
-        notificationId: 3,
-        title: "좋아요",
-        description: "내가 쓴 글에 좋아요 알림을 받겠습니다.",
-        isEnabled: true
-      },
-      {
-        notificationId: 4,
-        title: "추천 뉴스 / 게시글",
-        description: "Forde가 추천하는 뉴스와 게시글 알림을 받겠습니다.",
-        isEnabled: false
-      },
-      {
-        notificationId: 5,
-        title: "팔로우 뉴스 / 게시글",
-        description: "내가 팔로우한 사람의 뉴스와 게시글 알림을 받겠습니다.",
-        isEnabled: true
-      },
-      {
-        notificationId: 6,
-        title: "이벤트성 알림",
-        description: "Forde가 제공하는 이벤트성 알림을 받겠습니다.",
-        isEnabled: false
-      }
-    ];
+  getNotification: async (): Promise<UserNotificationResponse> => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8081/user/notification`,  
+        {
+          withCredentials: true
+        },
+      );
+      return response.data;
+    } catch (error) {
+      console.error("알림 상태 가져오기 중 오류 발생:", error);
+      throw error;
+    }
   },
   putNotification: async (
-    sessionKey: string, 
     noticeNotification: boolean,
     commentNotification: boolean,
     likeNotification: boolean,
@@ -203,7 +175,7 @@ export const UserApi = {
           eventNotification
         },
         {
-          headers: { Authorization: `Bearer ${sessionKey}` }
+          withCredentials: true
         }
       );
       return response.data;
@@ -223,7 +195,6 @@ export const UserApi = {
     }
   },
   patchSocialSetting: async (
-    sessionKey: string,
     disableFollow: boolean,
     disableAccount: boolean,
     disableStoreSearch: boolean,
@@ -236,9 +207,7 @@ export const UserApi = {
           disableAccount,
           disableStoreSearch
         },
-        {
-          headers: { Authorization: `Bearer ${sessionKey}` }
-        }
+        {withCredentials: true}
       );
       return response.data;
     } catch (error) {
@@ -247,13 +216,11 @@ export const UserApi = {
     }
   },
 
-  deleteSearchHistory: async( sessionKey: string ) => {
+  deleteSearchHistory: async() => {
     try {
       const response = await axios.put(
         `http://localhost:8081/user/history`, 
-        {
-          headers: { Authorization: `Bearer ${sessionKey}` }
-        }
+        {}, {withCredentials: true}
       );
       return response.data;
     } catch (error) {
@@ -268,7 +235,7 @@ export const UserApi = {
           email:email // body임 
         },
         {
-          headers: { Authorization: `Bearer ${sessionKey}` }
+          withCredentials: true
         }
       );
 
@@ -280,7 +247,7 @@ export const UserApi = {
       throw new Error("API 요청 실패");
     }
   },
-  postVerifyCompare: async (sessionKey:string, {email, verifyCode}: PostVerifyCompareParams): Promise<void> => {
+  postVerifyCompare: async ({email, verifyCode}: PostVerifyCompareParams): Promise<void> => {
     try {
       const response = await axios.post(`localhost:8081/user/verify`, 
         { 
@@ -288,7 +255,7 @@ export const UserApi = {
           verifyCode: verifyCode
         },
         {
-          headers: { Authorization: `Bearer ${sessionKey}` }
+          withCredentials: true
         }
       );
 
@@ -300,7 +267,7 @@ export const UserApi = {
       throw new Error("API 요청 실패");
     }
   },
-  PatchPassword: async(sessionKey:string|undefined, {password, randomKey}: PatchPasswordParams)=> {
+  patchPassword: async({password, randomKey}: PatchPasswordParams)=> {
     try {
       const response = await axios.patch(`localhost:8081/user/password`, 
         { 
@@ -308,7 +275,7 @@ export const UserApi = {
           randomKey:randomKey,
         },
         {
-          headers: { Authorization: `Bearer ${sessionKey}` }
+          withCredentials: true
         }
       );
 
@@ -369,8 +336,26 @@ export const UserApi = {
       return response.data;
     } catch (error) {
       if( error instanceof Error)
-        throw new Error(error.message || "회원강비 API 요청 실패");
+        throw new Error(error.message || "회원가입 API 요청 실패");
       throw new Error("회원가입 API 요청 실패");
+    }
+  },
+  postCheckRandomKey: async (randomKey: string): Promise<void> => {
+    try {
+      const response = await axios.post(`localhost:8081/user/password/randomkey`, 
+        { 
+          randomKey:randomKey,
+        },
+        {
+          withCredentials: true
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      if( error instanceof Error)
+        throw new Error(error.message || "랜덤키 검사 API 요청 실패");
+      throw new Error("랜덤키 검사 API 요청 실패");
     }
   },
 };

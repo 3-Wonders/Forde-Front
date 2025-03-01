@@ -19,6 +19,7 @@
     "@tiptap/extension-code-block-lowlight": "^2.6.6",
     "@tiptap/extension-link": "^2.6.6",
     "@tiptap/extension-list-item": "^2.6.6",
+    "@tiptap/extension-mention": "^2.11.5",
     "@tiptap/extension-placeholder": "^2.6.6",
     "@tiptap/extension-table": "^2.6.6",
     "@tiptap/extension-table-cell": "^2.6.6",
@@ -29,10 +30,12 @@
     "@tiptap/pm": "^2.6.6",
     "@tiptap/react": "^2.6.6",
     "@tiptap/starter-kit": "^2.6.6",
+    "@types/lodash": "^4.17.16",
     "axios": "^1.7.5",
     "highlight.js": "^11.10.0",
     "isomorphic-dompurify": "^2.14.0",
     "js-cookie": "^3.0.5",
+    "lodash": "^4.17.21",
     "lowlight": "^2.4.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -41,7 +44,8 @@
     "recoil": "^0.7.7",
     "tiptap-extension-resize-image": "^1.1.8",
     "tiptap-markdown": "^0.8.10",
-    "use-debounce": "^10.0.3"
+    "use-debounce": "^10.0.3",
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.8.0",

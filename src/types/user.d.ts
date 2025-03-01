@@ -50,6 +50,17 @@ export interface Notification {
   isEnabled: boolean;
 }
 
+export interface UserNotificationResponse {
+  userId: number;
+  noticeNotification: boolean;
+  commentNotification: boolean;
+  likeNotification: boolean;
+  recommendNotification: boolean;
+  followNotification: boolean;
+  eventNotification: boolean;
+}
+
+
 export interface SocialSetting {
   disableFoolow: boolean;
   disableAccount: boolean;

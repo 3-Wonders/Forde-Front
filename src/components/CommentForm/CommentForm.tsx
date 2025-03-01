@@ -50,7 +50,7 @@ const CommentForm = ({ initialContent = "", className, onSubmit }: CommentFormPr
   return (
     <form onSubmit={handleSubmit} className={`${classes.form} ${className}`}>
       {ToastElement}
-      <MentionEditor></MentionEditor>
+      <MentionEditor onChange={handleChange} isVisibleToolbar={false} placeholder="댓글"></MentionEditor>
       <Editor initialValue={content} onChange={handleChange} isVisibleToolbar={false} placeholder="댓글" />
       <FormButton text="댓글 쓰기" isDisabled={isDisabled} />
     </form>

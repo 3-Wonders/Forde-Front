@@ -1,4 +1,4 @@
-import { Board, BoardListWithType, DraftBoardList, UpdateBoardDetail } from "@/types/board";
+import { Board, BoardListWithType, DraftBoardList, RequestBoardPost, RequestBoardUpdate, UpdateBoardDetail } from "@/types/board";
 
 import Bitcoin from "@assets/bitcoin.png";
 import axios from "axios";
@@ -10,7 +10,7 @@ export const BoardApi = {
 
     
     // try { 
-    //   const response = await axios.post(
+    //   const response = await axios.get(
     //     `http://localhost:8081/recent`,  
     //     {
     //       withCredentials: true
@@ -737,29 +737,20 @@ activityFile.text = """
       createdTime: "2024-08-17 12:30:45",
     };
   },
-  fetchBoardDetailByUpdate: async (boardId: number, updateData: UpdateBoardDetail, thumbnailAction: string): Promise<UpdateBoardDetail> => {
+  fetchBoardDetailByUpdate: async (boardId: number): Promise<UpdateBoardDetail> => {
     console.log("fetch Board Detail : ", boardId);
-    try { 
-      const response = await axios.patch(
-        `http://localhost:8081/board/`+boardId, 
-        {
-          boardType: updateData.boardType,
-          title: updateData.title,
-          content: updateData.content,
-          tagIds: updateData.tags,
-          thumbnail: updateData.thumbnail,
-          thumbnailAction: thumbnailAction,
-          imageIds: updateData.imageIds
-        },
-        {
-          withCredentials: true
-        }
-      );
-      return response.data;
-    } catch (error) {
-      console.error("특정 게시글을 업데이트 하던 중 오류 발생:", error);
-      throw error;
-    }
+    // try { 
+    //   const response = await axios.get(
+    //     `http://localhost:8081/board/`+boardId, 
+    //     {
+    //       withCredentials: true
+    //     }
+    //   );
+    //   return response.data;
+    // } catch (error) {
+    //   console.error("특정 게시글을 가져오던던 중 오류 발생:", error);
+    //   throw error;
+    // }
     return {
       boardId: 1,
       boardType: "N",
@@ -893,6 +884,54 @@ public class Main {
       return response.data;
     } catch (error) {
       console.error("특정 게시글을 삭제하던 중 오류 발생:", error);
+      throw error;
+    }
+  },
+
+  fetchBoardUpdate: async (boardId: number, updateData: RequestBoardUpdate): Promise<UpdateBoardDetail> => {
+    console.log("fetch Board Detail : ", boardId);
+    try { 
+      const response = await axios.patch(
+        `http://localhost:8081/board/`+boardId, 
+        {
+          boardType: updateData.boardType,
+          title: updateData.title,
+          content: updateData.content,
+          tagIds: updateData.tagIds,
+          thumbnail: updateData.thumbnail,
+          thumbnailAction: updateData.thumbnailAction,
+          imageIds: updateData.imageIds
+        },
+        {
+          withCredentials: true
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("특정 게시글을 업데이트 하던 중 오류 발생:", error);
+      throw error;
+    }
+  },
+
+  postBoard: async (postData: RequestBoardPost): Promise<any> => {
+    try { 
+      const response = await axios.post(
+        `http://localhost:8081/board/`, 
+        {
+          boardType: postData.boardType,
+          title: postData.title,
+          content: postData.content,
+          tagIds: postData.tagIds,
+          thumbnail: postData.thumbnail,
+          imageIds: postData.imageIds
+        },
+        {
+          withCredentials: true
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("특정 게시글을 업데이트 하던 중 오류 발생:", error);
       throw error;
     }
   },

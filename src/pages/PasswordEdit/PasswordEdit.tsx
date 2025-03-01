@@ -1,7 +1,6 @@
-import { ChangeEvent, useCallback, useMemo, useState } from "react";
-import {
-  TextField,
-} from "@mui/material";
+import { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { TextField } from "@mui/material";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import classes from "@/layouts/Input/inputLayout.module.scss";
 
@@ -19,6 +18,11 @@ import { UserApi } from "@/api/user";
 type InputKey = "password" | "passwordCheck";
 
 const PasswordEdit = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [isValidRandomKey, setIsValidRandomKey] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [randomKey, setRandomKey] = useState<string>("");
 
   const [formData, setFormData] = useState<InputDataSet<InputKey, string>>({
     password: {
@@ -50,6 +54,39 @@ const PasswordEdit = () => {
     formData.passwordCheck.value,
   ]);
 
+  // URL에서 randomKey 가져오기 및 유효성 검사
+  useEffect(() => {
+    const checkRandomKey = async () => {
+      setIsLoading(true);
+      try {
+        // URL에서 randomKey 가져오기
+        const queryParams = new URLSearchParams(location.search);
+        const keyFromUrl = queryParams.get("randomKey");
+        
+        if (!keyFromUrl) {
+          // randomKey가 없으면 메인 페이지로 리다이렉트
+          navigate("/");
+          return;
+        }
+        
+        setRandomKey(keyFromUrl);
+        
+        // randomKey 유효성 검사 API 호출
+        const response = await UserApi.postCheckRandomKey(keyFromUrl);
+        
+        // status 204가 넘어오면 페이지를 정상적으로 표시
+        setIsValidRandomKey(true);
+      } catch (error) {
+        console.error("랜덤키 검증 실패:", error);
+        // 에러 발생 시 메인 페이지로 리다이렉트
+        navigate("/");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkRandomKey();
+  }, [location.search, navigate]);
 
   const checkValidationPassword = useCallback((password: string) => {
     const isValidate = validationPassword(password);
@@ -83,6 +120,7 @@ const PasswordEdit = () => {
     },
     [isInitinal, checkValidationPassword],
   );
+  
   const handleChangeCheck = useCallback(
     (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       if (isInitinal) setIsInitinal(false);
@@ -113,7 +151,7 @@ const PasswordEdit = () => {
     [isInitinal],
   );
 
-  const handleButton = async (password: string, randomKey: string) => {
+  const handleButton = async () => {
     try {
       const sessionKey = Cookies.get("sessionKey");
       if (!sessionKey) {
@@ -121,19 +159,33 @@ const PasswordEdit = () => {
         return;
       }
 
-      const response = await UserApi.PatchPassword(sessionKey, { password: password, randomKey: randomKey });
+      const response = await UserApi.patchPassword({ 
+        password: formData.password.value, 
+        randomKey: randomKey 
+      });
       
       if (response.success) {
         // 인증 성공 시 처리
         alert("비밀번호가 변경 되었습니다.");
+        navigate("/");
       } else {
         // 인증 실패
         alert(response.message);
       }
     } catch (error) {
       console.error("API 호출 실패:", error);
+      alert("비밀번호 변경 중 오류가 발생했습니다.");
     }
   };
+
+  // 로딩 중이거나 랜덤키가 유효하지 않으면 아무것도 표시하지 않음
+  if (isLoading) {
+    return <div>로딩 중...</div>;
+  }
+
+  if (!isValidRandomKey) {
+    return null; // 이미 useEffect에서 리다이렉트 처리함
+  }
 
   return (
     <InputLayout title="비밀번호 변경" desc="비밀번호 변경을 위해 비밀번호를 입력해주세요.">
@@ -160,7 +212,12 @@ const PasswordEdit = () => {
             onChange={(event) => handleChangeCheck(event)}
           />
         </div>
-        <FormButton text="비밀번호 변경" width="70%" isDisabled={isDisabled} onClick={() => handleButton(formData.password.value, "임의랜덤키")}/>
+        <FormButton 
+          text="비밀번호 변경" 
+          width="70%" 
+          isDisabled={isDisabled} 
+          onClick={handleButton}
+        />
       </form>
     </InputLayout>
   );

@@ -45,7 +45,7 @@ const BoardDetail = () => {
 
   const handleUpdate = useCallback(async () => {
     try {
-      BoardApi.fetchBoardDetailByDelete(boardId);
+      BoardApi.fetchBoardDetailByDelete(boardId); // 업데이트로 변경해야함.
     } catch (error) {
       console.error(error);
     }

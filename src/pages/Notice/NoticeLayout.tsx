@@ -20,8 +20,46 @@ const NoticeLayout = () => {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const sessionKey = Cookies.get("sessionKey"); // 쿠키에서 sessionKey 가져오기
-        const data = await UserApi.getNotification(sessionKey);
+        const notificationData = await UserApi.getNotification();
+
+        const data = [
+          {
+            notificationId: 1,
+            title: "공지사항",
+            description: "공지사항 알림을 받겠습니다.",
+            isEnabled: notificationData.noticeNotification
+          },
+          {
+            notificationId: 2,
+            title: "댓글",
+            description: "내가 쓴 글에 작성되는 댓글 알림을 받겠습니다.",
+            isEnabled: notificationData.commentNotification
+          },
+          {
+            notificationId: 3,
+            title: "좋아요",
+            description: "내가 쓴 글에 좋아요 알림을 받겠습니다.",
+            isEnabled: notificationData.likeNotification
+          },
+          {
+            notificationId: 4,
+            title: "추천 뉴스 / 게시글",
+            description: "Forde가 추천하는 뉴스와 게시글 알림을 받겠습니다.",
+            isEnabled: notificationData.recommendNotification
+          },
+          {
+            notificationId: 5,
+            title: "팔로우 뉴스 / 게시글",
+            description: "내가 팔로우한 사람의 뉴스와 게시글 알림을 받겠습니다.",
+            isEnabled: notificationData.followNotification
+          },
+          {
+            notificationId: 6,
+            title: "이벤트성 알림",
+            description: "Forde가 제공하는 이벤트성 알림을 받겠습니다.",
+            isEnabled: notificationData.eventNotification
+          }
+        ];
         const initialNotifications: Record<number, boolean> = {};
         data.forEach((item: { notificationId: number; isEnabled: boolean }) => {
           initialNotifications[item.notificationId] = item.isEnabled;
@@ -48,7 +86,6 @@ const NoticeLayout = () => {
       await setNotifications((prev) => ({ ...prev, [notificationId]: newState }));
 
       await UserApi.putNotification(
-        sessionKey, 
         notifications[1],
         notifications[2],
         notifications[3],

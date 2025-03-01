@@ -1,8 +1,163 @@
-.container {
+.modal {
+  overflow-y: auto;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  min-width: 22.5rem;
+  min-height: 10rem;
+  max-height: 30rem;
+  padding: 1.25rem;
+  border-radius: $border-half-radius;
+  background-color: $background-light-color;
+  box-shadow: 0px 5px 12px 0px #000;
+  font-size: 1rem;
+  cursor: default;
+
+  scrollbar-width: thin;
+  scrollbar-color: #474d61 $background-color;
+
+  // Scrollbar styling for WebKit browsers
+  &::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $white-color;
+    border-radius: 16px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $white-color;
+    border-radius: 16px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: $white-color;
+  }
+}
+.mentionSuggestions {
+  background-color: #1E252B;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.1);
+  color: white;
+  overflow: hidden;
+  z-index: 20;
+}
+
+.mentionList {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.mentionItem {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.mentionItemSelected {
+  background-color: #007bff;
+}
+
+.mention {
+  background-color: rgba(0, 123, 255, 0.2);
+  border-radius: 0.25rem;
+  color: #007bff;
+  font-weight: 500;
+  padding: 0.1rem 0.2rem;
+  text-decoration: none;
+}
+.mentionSuggestions {
+  background-color: #1E252B;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.1);
+  color: white;
+  overflow: hidden;
+  z-index: 1000;
+}
+
+.mentionList {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.mentionItem {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.mentionItemSelected {
+  background-color: #007bff;
+}
+
+.mention {
+  background-color: rgba(0, 123, 255, 0.2);
+  border-radius: 0.25rem;
+  color: #007bff;
+  font-weight: 500;
+  padding: 0.1rem 0.2rem;
+  text-decoration: none;
+}
+
+.editorBox {
+  position: relative;
   width: 100%;
 }
 
-
-
+.editor {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  min-height: 100px;
+  padding: 8px;
+  width: 100%;
+}
 .mention {
+  color: #0366d6;
+  background-color: rgba(3, 102, 214, 0.1);
+  padding: 0 4px;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.mentionSuggestions {
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.mentionList {
+  padding: 4px 0;
+}
+
+.mentionItem {
+  padding: 8px 16px;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: #f0f0f0;
+  }
+}
+
+.mentionItemSelected {
+  background-color: #e6f7ff;
+}
+
+@include mobile {
+  .modal {
+    position: fixed;
+    top: 4rem;
+    left: 0;
+    right: 0;
+    width: 100%;
+    padding: 1.25rem;
+  }
 }

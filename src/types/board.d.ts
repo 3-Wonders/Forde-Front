@@ -70,3 +70,22 @@ export type RequestBoard = {
   thumbnail?: File | string | null;
   imageIds?: number[];
 };
+
+export type RequestBoardUpdate = {
+  boardType: BoardType;
+  title: string;
+  content: string;
+  tagIds?: number[];
+  thumbnail?: File;
+  thumbnailAction: string;
+  imageIds?: number[];
+}
+
+export type RequestBoardPost = {
+  boardType: BoardType;
+  title: string;
+  content: string;
+  tagIds?: number[];
+  thumbnail?: File;
+  imageIds?: number[];
+}

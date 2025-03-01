@@ -38,7 +38,7 @@ const EmailVerifyCode = () => {
         return;
       }
 
-      const response = await UserApi.postVerifyCompare(sessionKey, {email : email, verifyCode: codeInput});
+      const response = await UserApi.postVerifyCompare({email : email, verifyCode: codeInput});
       // if (response.statusCode == 200 )
       alert("인증 완료 : " + response);
     } catch (error) {
