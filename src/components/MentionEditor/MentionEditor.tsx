@@ -53,7 +53,7 @@ const MentionEditor = ({
 const renderSuggestions = () => {
   return {
     items: ({ query }: { query: string }) => {
-      console.log('멘션 쿼리:', query, users); // 디버깅용 로그
+      console.log('멘션 쿼리:', query, users);
       return users
         .filter(user => user.name.toLowerCase().includes(query.toLowerCase()))
         .slice(0, 5);
@@ -64,7 +64,7 @@ const renderSuggestions = () => {
 
       return {
         onStart: (props: any) => {
-          console.log('멘션 시작:', props); // 디버깅용 로그
+          console.log('멘션 시작:', props);
           component = props;
           
           if (popup) {
@@ -72,26 +72,26 @@ const renderSuggestions = () => {
           }
           
           popup = document.createElement('div');
+          // CSS 클래스 적용
           popup.classList.add(classes.mentionSuggestions);
-          document.body.appendChild(popup);
           
+          // 위치 관련 스타일만 인라인으로 설정
           popup.style.position = 'absolute';
           popup.style.zIndex = '1000';
+          popup.style.visibility = 'hidden';
+          
+          document.body.appendChild(popup);
           
           return popup;
         },
         
         onUpdate: (props: any) => {
-          console.log('멘션 업데이트:', props); // 디버깅용 로그
+          console.log('멘션 업데이트:', props);
           component = props;
           
-          if (!props.clientRect || !popup) {
-            return;
-          }
+          if (!popup) return;
           
-          popup.style.left = `${props.clientRect.left}px`;
-          popup.style.top = `${props.clientRect.top + 24}px`;
-          
+          // 내용 업데이트 - CSS 클래스 적용
           popup.innerHTML = `
             <div class="${classes.mentionList}">
               ${props.items.length ? 
@@ -103,7 +103,7 @@ const renderSuggestions = () => {
                     @${item.name}
                   </div>`
                 ).join('') : 
-                '<div class="${classes.mentionItem}">검색 결과가 없습니다</div>'
+                `<div class="${classes.mentionItem}">검색 결과가 없습니다</div>`
               }
             </div>
           `;
@@ -117,10 +117,43 @@ const renderSuggestions = () => {
               }
             });
           });
+          
+          // 댓글 에디터 요소 찾기
+          const commentEditor = document.querySelector(`.${classes.editor}`);
+          
+          if (commentEditor) {
+            const editorRect = commentEditor.getBoundingClientRect();
+            
+            // 스크롤 위치 가져오기
+            const scrollX = window.scrollX || window.pageXOffset;
+            const scrollY = window.scrollY || window.pageYOffset;
+            
+            // 절대 위치 계산 (스크롤 포함)
+            const absoluteLeft = editorRect.left + scrollX;
+            const absoluteTop = editorRect.top + scrollY;
+            
+            // 에디터 내에서 @ 입력 위치 찾기
+            if (props.clientRect && props.clientRect.top != null) {
+              const mentionLeft = props.clientRect.left + scrollX;
+              const mentionTop = props.clientRect.top + scrollY;
+              
+              popup.style.left = `${mentionLeft}px`;
+              popup.style.top = `${mentionTop + 20}px`; // @ 위치 아래 20px
+            } else {
+              // 폴백: 에디터 위치 기준으로 설정
+              popup.style.left = `${absoluteLeft + 20}px`;
+              popup.style.top = `${absoluteTop + 30}px`;
+            }
+            
+            // 팝업 표시
+            popup.style.visibility = 'visible';
+          } else {
+            console.warn('댓글 에디터 요소를 찾을 수 없습니다!');
+          }
         },
         
         onKeyDown: (props: any) => {
-          console.log('멘션 키다운:', props); // 디버깅용 로그
+          console.log('멘션 키다운:', props);
           if (props.event.key === 'ArrowUp') {
             component.upHandler();
             return true;
@@ -142,7 +175,7 @@ const renderSuggestions = () => {
         },
         
         onExit: () => {
-          console.log('멘션 종료'); // 디버깅용 로그
+          console.log('멘션 종료');
           if (popup) {
             popup.remove();
             popup = null;
@@ -152,6 +185,10 @@ const renderSuggestions = () => {
     },
   };
 };
+
+
+
+
 
 
   const editor = useEditor({
