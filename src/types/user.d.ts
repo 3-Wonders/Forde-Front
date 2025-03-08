@@ -5,7 +5,7 @@ export type User = {
   nickname: string;
   description: string;
   profilePath: string;
-  interestTags: Tag[];
+  interestedTags: Tag[];
   boardCount: number;
   newsCount: number;
   likeCount: number;

@@ -9,18 +9,18 @@ export const BoardApi = {
     console.log(page, count);
 
     
-    // try { 
-    //   const response = await axios.get(
-    //     `http://localhost:8081/recent?page=`+page+`&count=`+count,  
-    //     {
-    //       withCredentials: true
-    //     }
-    //   );
-    //   return response.data;
-    // } catch (error) {
-    //   console.error("이것 저것 가져오던 중 오류 발생:", error);
-    //   throw error;
-    // }
+    try { 
+      const response = await axios.get(
+        `http://localhost:8080/recent?page=`+page+`&count=`+count,  
+        {
+          withCredentials: true
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("이것 저것 가져오던 중 오류 발생:", error);
+      throw error;
+    }
 
     // TODO: 최근 뉴스 또는 게시글 목록을 불러오는 API 호출
     const recentBoards: BoardListWithType = {
@@ -119,19 +119,19 @@ export const BoardApi = {
   fetchRecentNews: async ({ page, count }: { page: number; count: number }) => {
     console.log(page, count);
 
-    // try { 
-    //   const response = await axios.get(
-    //     `http://localhost:8081/news`,  
-    //     {
-    //       params: { page, count },
-    //       withCredentials: true
-    //     }
-    //   );
-    //   return response.data;
-    // } catch (error) {
-    //   console.error("최신 뉴스를 가져오던 중 오류 발생:", error);
-    //   throw error;
-    // }
+    try { 
+      const response = await axios.get(
+        `http://localhost:8080/news`,  
+        {
+          params: { page, count },
+          withCredentials: true
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("최신 뉴스를 가져오던 중 오류 발생:", error);
+      throw error;
+    }
 
     // TODO: 최근 뉴스를 불러오는 API 호출 
     const recentNews: BoardListWithType = {
@@ -231,19 +231,19 @@ export const BoardApi = {
     console.log(page, count);
 
 
-    // try { 
-    //   const response = await axios.get(
-    //     `http://localhost:8081/board`,  
-    //     {
-    //       params: { page, count },
-    //       withCredentials: true
-    //     }
-    //   );
-    //   return response.data;
-    // } catch (error) {
-    //   console.error("최신 게시글를 가져오던 중 오류 발생:", error);
-    //   throw error;
-    // }
+    try { 
+      const response = await axios.get(
+        `http://localhost:8080/board`,  
+        {
+          params: { page, count },
+          withCredentials: true
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("최신 게시글를 가져오던 중 오류 발생:", error);
+      throw error;
+    }
 
     // TODO: 최근 게시글 목록을 불러오는 API 호출
     const recentBoards: BoardListWithType = {
@@ -342,19 +342,19 @@ export const BoardApi = {
   fetchRecentFollowingBoards: async ({ page, count }: { page: number; count: number }) => {
     console.log(page, count);
 
-    // try { 
-    //   const response = await axios.get(
-    //     `http://localhost:8081/board/following`,  
-    //     {
-    //       params: { page, count },
-    //       withCredentials: true
-    //     }
-    //   );
-    //   return response.data;
-    // } catch (error) {
-    //   console.error("최신 게시글를 가져오던 중 오류 발생:", error);
-    //   throw error;
-    // }
+    try { 
+      const response = await axios.get(
+        `http://localhost:8080/board/following`,  
+        {
+          params: { page, count },
+          withCredentials: true
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("최신 게시글를 가져오던 중 오류 발생:", error);
+      throw error;
+    }
 
     // TODO: 팔로잉 게시글 또는 뉴스 목록을 불러오는 API 호출
     const recentBoards: BoardListWithType = {

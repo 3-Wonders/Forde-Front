@@ -109,21 +109,29 @@ const Login = () => {
   );
 
   const handleSubmit = useCallback(
-    (event: FormEvent<HTMLFormElement>) => {
+    async (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
 
       // TODO: 로그인 API 호출
       console.table(formData);
-      UserApi.login({email:formData.email.value, password:formData.password.value});
+      const response = await UserApi.login({email:formData.email.value, password:formData.password.value});
 
-
-
-      const params = new URLSearchParams(location.search);
-      if (params.get("redirect")) {
-        navigate(params.get("redirect") as string);
-      } else {
-        navigate("/");
+      // 여기서 response.errorCode
+      if(response?.response?.data?.errorCode != null){
+        if(response.response.data.errorCode == "F40302")
+        {
+          window.location.href = '/email/verify';
+        }
       }
+      else {
+        const params = new URLSearchParams(location.search);
+        if (params.get("redirect")) {
+          navigate(params.get("redirect") as string);
+        } else {
+          navigate("/");
+        }
+      }
+
     },
     [formData, location.search, navigate],
   );
@@ -177,7 +185,7 @@ const Login = () => {
             </Link>
           </div>
         </div>
-        <FormButton text="로그인" width="100%" isDisabled={isDisabled} />
+        <FormButton text="로그인" width="100%" isDisabled={isDisabled}  />
       </form>
     </AuthLayout>
   );

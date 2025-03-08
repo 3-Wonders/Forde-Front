@@ -7,10 +7,8 @@ import "./ProfileLayout.scss";
 
 import { UserApi } from "@/api/user";
 
-import ProfileIcon from "@/assets/profile-mypage.svg"
-import AccountIcon from "@/assets/account.svg"
-import ActiveIcon from "@/assets/active.svg"
 import MyPageNavigation from "@/components/SubNavigation/MyPageNavigation/MyPageNavigation";
+import { List } from "@mui/material";
 
 const ProfileLayout = () => {
   const tabletSize = 992;
@@ -21,42 +19,43 @@ const ProfileLayout = () => {
   }, [width, tabletSize]);
 
   const [nickname, setNickName] = useState("");
-  const [description, setDescription ] = useState("");
+  const [description, setDescription] = useState("");
   const [profilePath, setProfilePath] = useState("");
-  const [interestTags, setInterestTags ] = useState<Record<string, string>>({});
-  const [boardCount, setBoardCount ] = useState(0);
-  const [newsCount, setNewsCount ] = useState(0);
-  const [likeCount, setLikeCount ] = useState(0);
-  const [commentCount, setCommentCount ] = useState(0);
+  const [interestTags, setInterestTags] = useState<Record<string, string>>({});
+  const [boardCount, setBoardCount] = useState(0);
+  const [newsCount, setNewsCount] = useState(0);
+  const [likeCount, setLikeCount] = useState(0);
+  const [commentCount, setCommentCount] = useState(0);
   const [newTag, setNewTag] = useState(""); // 입력한 새 태그 값
 
   useEffect(() => {
-      const fetchUserData = async () => {
-        try {
-          const userData = await UserApi.getUser();
-          setNickName(userData.nickname);
-          setDescription(userData.description);
-          setProfilePath(userData.profilePath);
-          setBoardCount(userData.boardCount);
-          setNewsCount(userData.newsCount);
-          setLikeCount(userData.likeCount);
-          setCommentCount(userData.commentCount);
+    const fetchUserData = async () => {
+      try {
+        const userData = await UserApi.getUser();
+        console.log(userData);
+        setNickName(userData.nickname);
+        setDescription(userData.description);
+        setProfilePath(userData.profilePath);
+        setBoardCount(userData.boardCount);
+        setNewsCount(userData.newsCount);
+        setLikeCount(userData.likeCount);
+        setCommentCount(userData.commentCount);
 
-          const tags: Record<string, string> = {};
-          for (const tag of userData.interestTags) {
+        const tags: Record<string, string> = {};
+        if (userData.interestedTags.length > 0)
+          for (const tag of userData.interestedTags) {
             tags[tag.tagName] = tag.tagName;
           }
-    
-          setInterestTags(tags);
-        } catch (error) {
-          console.error("사용자 정보를 불러오는 중 오류 발생", error);
-        }
-      };
-  
-      fetchUserData();
-    }, []);
-  
-  
+
+        setInterestTags(tags);
+      } catch (error) {
+        console.error("사용자 정보를 불러오는 중 오류 발생", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
   const handleTagInput = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && newTag.trim() !== "") {
       const tagValue = newTag.trim();
@@ -78,14 +77,14 @@ const ProfileLayout = () => {
       }
     }
   };
-  
+
   // 저장 버튼 클릭 시 API 호출
   const handleSave = async () => {
     try {
       await UserApi.updateUser({
         nickname,
         description,
-        interestTags: Object.values(interestTags), // 배열로 바꿔줘야함
+        interestTags: [1]
       });
       alert("프로필이 성공적으로 저장되었습니다.");
     } catch (error) {
@@ -118,13 +117,20 @@ const ProfileLayout = () => {
               <input
                 id="nickname"
                 type="text"
-                defaultValue={nickname}
-                // placeholder="윤우엔띠엔"
+                value={nickname}
+                onChange={(e) => setNickName(e.target.value)}
+                placeholder="닉네임을 입력하세요"
               />
             </div>
             <div className="formGroup">
               <label htmlFor="description">자기 소개</label>
-              <textarea id="description" placeholder="자신을 소개해보세요." value={description} rows={5}/>
+              <textarea 
+                id="description" 
+                placeholder="자신을 소개해보세요." 
+                value={description} 
+                onChange={(e) => setDescription(e.target.value)}
+                rows={5}
+              />
             </div>
             <div className="formGroup">
               <label>관심 있는 태그</label>

@@ -1,9 +1,22 @@
 import { Notifications } from "@/types/notification";
+import axios from "axios";
 
 export const NotificationApi = {
   getNotifications: async ({ page, count }: { page: number; count: number }) => {
     console.log("notifications", page, count);
-
+    
+    try {
+      const response = await axios.get(`http://localhost:8080/notification?page=`+page+`&count=`+count, 
+        {withCredentials: true}
+      );
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      if( error instanceof Error)
+        throw new Error(error.message || "API 요청 실패");
+      throw new Error("API 요청 실패");
+    }
+    
     const notifications: Notifications = {
       notifications: [
         {
@@ -88,6 +101,16 @@ export const NotificationApi = {
     return notifications;
   },
   getUnReadCount: async () => {
-    return 34;
+    try {
+      const response = await axios.get(`http://localhost:8080/notification/following/count`, 
+        {withCredentials: true}
+      );
+      console.log("uRC : " + response.data.unReadCount);
+      return response.data.unReadCount;
+    } catch (error) {
+      if( error instanceof Error)
+        throw new Error(error.message || "API 요청 실패");
+      throw new Error("API 요청 실패");
+    }
   },
 };

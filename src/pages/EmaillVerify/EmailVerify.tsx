@@ -1,11 +1,14 @@
 import { useState } from "react";
 import EmailVerifyLayout from "@/layouts/EmailVerify/EmailVerifyLayout";
 import EnterInformation from "@/components/EnterInformation/EnterInformation";
+import { useNavigate } from "react-router-dom";
 
 import Cookies from "js-cookie";
 import { UserApi } from "@/api/user";
 
 const EmailVerify = () => {
+  const navigate = useNavigate();
+
   const [emailInput, setEmailInput] = useState<string>("");
 
   const emailButtonClick = async () => {
@@ -22,16 +25,15 @@ const EmailVerify = () => {
 
     try {
       
-      const sessionKey = Cookies.get("sessionKey");
-      if (!sessionKey) {
-        console.error("세션 키 없음");
-        return;
-      }
-
-      const response = await UserApi.postVerify(sessionKey, {email : emailInput});
+      const response = await UserApi.postVerify({email : emailInput});
 
       console.log("이메일 인증 요청 성공:", response);
-      alert("이메일 인증번호가 발송되었습니다2.");
+      // alert("이메일 인증번호가 발송되었습니다.");    
+      navigate("/email/verify/code", { 
+        state: { email: emailInput } 
+      });
+      console.log("navigate 함수 실행 완료");
+
     } catch (error) {
       console.error("이메일 인증 요청 실패:", error);
       alert("이메일 인증 요청에 실패했습니다.");

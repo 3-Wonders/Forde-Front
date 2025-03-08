@@ -1,7 +1,19 @@
 import { TagPopular, TagSearch } from "@/types/tag";
+import axios from "axios";
 
 export const TagApi = {
   fetchPopularTags: async (): Promise<TagPopular> => {
+    
+    try {
+      const response = await axios.get(`http://localhost:8080/tag/popular`, 
+        {withCredentials: true}
+      );
+      return response.data;
+    } catch (error) {
+      if( error instanceof Error)
+        throw new Error(error.message || "API 요청 실패");
+      throw new Error("API 요청 실패");
+    }
     return {
       tags: [
         {
@@ -40,6 +52,16 @@ export const TagApi = {
   fetchSearchTags: async (keyword: string): Promise<TagSearch> => {
     console.log("fetchSearchTags : ", keyword);
 
+    try {
+      const response = await axios.get(`http://localhost:8080/tag?keyword=`+keyword, 
+        {withCredentials: true}
+      );
+      return response.data;
+    } catch (error) {
+      if( error instanceof Error)
+        throw new Error(error.message || "API 요청 실패");
+      throw new Error("API 요청 실패");
+    }
     return {
       tags: [
         {

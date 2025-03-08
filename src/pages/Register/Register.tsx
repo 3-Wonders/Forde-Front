@@ -25,6 +25,7 @@ import { validationEmail, validationPassword } from "@/utils/validation";
 
 import { UserApi } from "@/api/user";
 
+
 type InputKey = "email" | "password" | "passwordConfirm" | "nickname";
 
 const Register = () => {
@@ -192,15 +193,14 @@ const Register = () => {
   );
 
   const handleSubmit = useCallback(
-    (event: React.FormEvent<HTMLFormElement>) => {
+    async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
 
       if (!isAgreeTerms) {
         return;
       }
-
       // 여기서 회원가입 요청 보내기
-      UserApi.postUser(
+      const response = await UserApi.postUser(
         {
           email:formData.email.value, 
           password:formData.password.value, 
@@ -208,8 +208,14 @@ const Register = () => {
           isEnableNotification:isAgreeNotification
         }
       );
-
-      console.table({ ...formData, isAgreeTerms, isAgreeNotification, isAgreeEvent });
+      console.log(response);
+      console.log(response?.status);
+      console.log(response?.data);
+      // 상태 코드가 204인 경우 홈페이지로 리다이렉트
+      if (response?.status === 204) {
+        alert("!")
+        window.location.href = '/'; // 또는 navigate('/')
+      }
     },
     [formData, isAgreeEvent, isAgreeNotification, isAgreeTerms],
   );

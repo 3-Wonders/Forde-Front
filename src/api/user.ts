@@ -3,38 +3,18 @@ import axios from "axios";
 
 export const UserApi = {
   getUser: async (): Promise<User> => {
-    // try { 
-    //   const response = await axios.get(
-    //     `http://localhost:8081/user`,  
-    //     {
-    //       withCredentials: true
-    //     }
-    //   );
-    //   return response.data;
-    // } catch (error) {
-    //   console.error("유저 정보 가져오던 중 오류 발생:", error);
-    //   throw error;
-    // }
-    return {
-      userId: 2,
-      nickname: "응우옌성빈",
-      description: "나는 날아오를거야",
-      profilePath: "https://i.namu.wiki/i/e_8JjVOxkmbsOsV1oclnb_o3u0bPet7BKts882La2j_wPox4LKihPaeEHZgKqa0VAwh1AU6wy46DNXBIeQy_5w.webp",
-      interestTags: [
+    try { 
+      const response = await axios.get(
+        `http://localhost:8080/user`,  
         {
-          tagId: 11,
-          tagName: "태그1번",
-        },
-        {
-          tagId: 22,
-          tagName: "태그2번",
-        },
-      ],
-      boardCount: 1111,
-      newsCount: 2222,
-      likeCount: 3333,
-      commentCount: 5555,
-    };
+          withCredentials: true
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("유저 정보 가져오던 중 오류 발생:", error);
+      throw error;
+    }
   },
   getOneUser: async (userId : number): Promise<OtherUser> => {
     // try { 
@@ -65,24 +45,19 @@ export const UserApi = {
   },
   getIntroUser: async (): Promise<IntroUser> => {
     // throw new Error("Unauthorized Error");
-    // try { 
-    //   const response = await axios.get(
-    //     `http://localhost:8081/user/intro`,  
-    //     {
-    //       withCredentials: true
-    //     }
-    //   );
-    //   return response.data;
-    // } catch (error) {
-    //   console.error("유저 정보 가져오던 중 오류 발생:", error);
-    //   throw error;
-    // }
-    return {
-      userId: 2,
-      nickname: "김승용",
-      email: "seungyong20@naver.com",
-      profilePath: "https://avatars.githubusercontent.com/u/77449569?v=4",
-    };
+    try { 
+      const response = await axios.get(
+        `http://localhost:8080/user/intro`,  
+        {
+          withCredentials: true
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("유저 정보 가져오던 중 오류 발생:", error);
+      throw error;
+    }
+
   },
   getSnsInfos: async (): Promise<SnsInfos> => {
     // try { 
@@ -128,10 +103,10 @@ export const UserApi = {
   updateUser: async (userData: {
     nickname: string;
     description: string;
-    interestTags: string[];
+    interestTags: number[];
   }) => {
     try {
-      const response = await axios.patch(`localhost:8081/user`, userData,
+      const response = await axios.patch(`http://localhost:8080/user`, userData,
           {
             withCredentials: true
           });
@@ -228,9 +203,9 @@ export const UserApi = {
       throw error;
     }
   },
-  postVerify: async (sessionKey:string, { email }: PostVerifyParams): Promise<PostVerifyResponse> => {
+  postVerify: async ({ email }: PostVerifyParams): Promise<PostVerifyResponse> => {
     try {
-      const response = await axios.post(`localhost:8081/user/verify`, 
+      const response = await axios.post(`http://localhost:8080/user/verify`, 
         { 
           email:email // body임 
         },
@@ -249,7 +224,7 @@ export const UserApi = {
   },
   postVerifyCompare: async ({email, verifyCode}: PostVerifyCompareParams): Promise<void> => {
     try {
-      const response = await axios.post(`localhost:8081/user/verify/compare`, 
+      const response = await axios.post(`http://localhost:8080/user/verify/compare`, 
         { 
           email:email,
           verifyCode: verifyCode
@@ -288,9 +263,9 @@ export const UserApi = {
     }
   },
   
-  login: async ({email, password}: PostLoginParams): Promise<void> => {
+  login: async ({email, password}: PostLoginParams): Promise<any> => {
     try {
-      const response = await axios.post(`localhost:8081/user/login`, 
+      const response = await axios.post(`http://localhost:8080/user/login`, 
         { 
           email:email,
           password: password
@@ -301,14 +276,15 @@ export const UserApi = {
       // 응답 데이터 형식이 success와 message를 포함한다고 가정
       return response.data;
     } catch (error) {
-      if( error instanceof Error)
-        throw new Error(error.message || "API 요청 실패");
+      if( error instanceof Error){
+        return error;
+      }
       throw new Error("API 요청 실패");
     }
   },
   logout: async () => {
     try {
-      const response = await axios.post(`localhost:8081/user/logout`, 
+      const response = await axios.post(`http://localhost:8080/user/logout`, 
         {withCredentials: true}
       );
 
@@ -319,9 +295,9 @@ export const UserApi = {
       throw new Error("API 요청 실패");
     }
   },
-  postUser: async ({email, password, isEnableEvent, isEnableNotification}: PostRegisterParams): Promise<void> => {
+  postUser: async ({email, password, isEnableEvent, isEnableNotification}: PostRegisterParams): Promise<any> => {
     try {
-      const response = await axios.post(`localhost:8081/user`, 
+      const response = await axios.post(`http://localhost:8080/user`, 
         { 
           email:email,
           password: password,
@@ -332,8 +308,8 @@ export const UserApi = {
           withCredentials: true
         }
       );
-
-      return response.data;
+      console.log(response);
+      return response;
     } catch (error) {
       if( error instanceof Error)
         throw new Error(error.message || "회원가입 API 요청 실패");

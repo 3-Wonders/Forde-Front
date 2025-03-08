@@ -1,28 +1,26 @@
 import { useEffect, useState } from "react";
 import EmailVerifyLayout from "@/layouts/EmailVerify/EmailVerifyLayout";
 import EnterInformation from "@/components/EnterInformation/EnterInformation";
+import { useLocation, useNavigate } from 'react-router-dom';
 
-import Cookies from "js-cookie";
 import { UserApi } from "@/api/user";
 
 const EmailVerifyCode = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [codeInput, setCodeInput] = useState<string>("");
   const [email, setEmail] = useState<string>("");
 
   useEffect(() => {
     const fetchUserEmail = async () => {
       try {
-        // const sessionKey = Cookies.get("sessionKey");
-        // if (!sessionKey) {
-        //   console.error("세션 키 없음");
-        //   return;
-        // }
-        const response = await UserApi.getIntroUser();
-        if (response && response.email) {
-          setEmail(response.email);
+
+        const email = location.state?.email;
+        if (email) {
+          setEmail(email);
         }
       } catch (error) {
-        console.error("유저 정보 불러오기 실패:", error);
+        console.error("이메일 불러오기 실패:", error);
       }
     };
 
@@ -32,15 +30,10 @@ const EmailVerifyCode = () => {
   const codeButtonClick = async () => {
     try {
 
-      const sessionKey = Cookies.get("sessionKey");
-      if (!sessionKey) {
-        console.error("세션 키 없음");
-        return;
-      }
-
       const response = await UserApi.postVerifyCompare({email : email, verifyCode: codeInput});
       // if (response.statusCode == 200 )
-      alert("인증 완료 : " + response);
+      console.log("인증 완료 : " + response);
+      navigate("/");
     } catch (error) {
       console.error("이메일 인증 요청 실패:", error);
       alert("이메일 인증 요청에 실패했습니다.");
