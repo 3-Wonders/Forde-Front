@@ -1,9 +1,20 @@
-import { ChildCommentList, ParentCommentList } from "@/types/comment";
+import { ChildCommentList, ParentCommentList, PostChildCommentRequest } from "@/types/comment";
+import axios from "axios";
 
 export const CommentApi = {
   fetchParentComments: async (boardId: number, page: number, count: number): Promise<ParentCommentList> => {
     console.log("Fetch parent comments : ", boardId, page, count);
+    // try{
+    //   const response = await axios.get(
+    //     `http://localhost:8081/board/`+boardId+`/comment?page=` + page + `&count=` + count,
+    //     { withCredentials : true }
+    //   );
 
+    //   return response.data;
+    // } catch( error ) {
+    //   console.log(" 댓글 가져오기 중 에러 : "  + error );
+    //   throw error;
+    // } 
     return {
       comments: [
         {
@@ -65,6 +76,56 @@ export const CommentApi = {
       total: 16,
     };
   },
+
+  postParentComment: async (boardId: number, userIds : number[], content: string): Promise<any> => {
+    try{
+      const response = await axios.post(
+        `http://localhost:8081/board/`+boardId+`/comment`,
+        { userIds: userIds,
+          content: content,
+        },
+        { withCredentials : true }
+      );
+
+      return response.data;
+    } catch( error ) {
+      console.log(" 댓글 작성 중 에러 : "  + error );
+      throw error;
+    } 
+  },
+
+  updateParentComment: async (boardId: number, commentId: number, userIds : number[], content: string): Promise<any> => {
+    try{
+      const response = await axios.patch(
+        `http://localhost:8081/board/`+boardId+`/comment/`+commentId,
+        { userIds: userIds,
+          content: content,
+        },
+        { withCredentials : true }
+      );
+
+      return response.data;
+    } catch( error ) {
+      console.log(" 댓글 수정 중 에러 : "  + error );
+      throw error;
+    } 
+  },
+
+  deleteParentComment: async (boardId: number, commentId: number): Promise<any> => {
+    try{
+      const response = await axios.delete(
+        `http://localhost:8081/board/`+boardId+`/comment/`+commentId,
+        { withCredentials : true }
+      );
+
+      return response.data;
+    } catch( error ) {
+      console.log(" 댓글 삭제 중 에러 : "  + error );
+      throw error;
+    } 
+  },
+
+
   fetchChildComments: async (
     boardId: number,
     commentId: number,
@@ -72,7 +133,17 @@ export const CommentApi = {
     count: number,
   ): Promise<ChildCommentList> => {
     console.log("Fetch child comments : ", boardId, commentId, page, count);
+    // try{
+    //   const response = await axios.get(
+    //     `http://localhost:8081/board/`+boardId+`/comment/` + commentId +`?page=` + page + `&count=` + count,
+    //     { withCredentials : true }
+    //   );
 
+    //   return response.data;
+    // } catch( error ) {
+    //   console.log(" 자식 댓글 가져오기 중 에러 : "  + error );
+    //   throw error;
+    // } 
     return {
       comments: [
         {
@@ -99,4 +170,20 @@ export const CommentApi = {
       total: 16,
     };
   },
+
+  postChildComment: async (requestData: PostChildCommentRequest, boardId: number, commentId: number, content: string): Promise<any> => {
+    try{
+      const response = await axios.post(
+        `http://localhost:8081/board/`+boardId+`/comment/` + commentId,
+        { requestData },
+        { withCredentials : true }
+      );
+
+      return response.data;
+    } catch( error ) {
+      console.log(" 대댓글 작성 중 에러 : "  + error );
+      throw error;
+    } 
+  },
+
 };

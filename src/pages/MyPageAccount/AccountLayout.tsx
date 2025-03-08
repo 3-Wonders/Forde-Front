@@ -11,6 +11,8 @@ import KakaoIcon from "@/assets/kakao.svg";
 
 import { UserApi } from "@/api/user";
 
+import MyPageNavigation from "@/components/SubNavigation/MyPageNavigation/MyPageNavigation";
+
 const AccountLayout = () => {
   const tabletSize = 992;
   const { width } = useWindowSize();
@@ -102,19 +104,7 @@ const AccountLayout = () => {
       {header}
       <div className="accountPageContainer">
         <div className="accountInner">
-          <div className="accountLeftCard">
-            <ul className="menuList">
-              <li>
-                프로필
-              </li>
-              <li className="active">
-                계정 관리
-              </li>
-              <li>
-                활동 내역
-              </li>
-            </ul>
-          </div>
+        <MyPageNavigation isActive={2} />
 
           <div className="accountCenterCard">
             <div className="sectionHeader">이메일</div>

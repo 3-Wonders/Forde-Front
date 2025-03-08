@@ -1,4 +1,4 @@
-import { IntroUser, OtherUser, SnsInfos, User, Notification, PostVerifyParams, PostVerifyResponse, PatchPasswordParams, PostVerifyCompareParams, PostLoginParams, PostRegisterParams, UserNotificationResponse } from "@/types/user";
+import { IntroUser, OtherUser, SnsInfos, User, Notification, PostVerifyParams, PostVerifyResponse, PatchPasswordParams, PostVerifyCompareParams, PostLoginParams, PostRegisterParams, UserNotificationResponse, UsersMentionResponse, MentionUser } from "@/types/user";
 import axios from "axios";
 
 export const UserApi = {
@@ -249,7 +249,7 @@ export const UserApi = {
   },
   postVerifyCompare: async ({email, verifyCode}: PostVerifyCompareParams): Promise<void> => {
     try {
-      const response = await axios.post(`localhost:8081/user/verify`, 
+      const response = await axios.post(`localhost:8081/user/verify/compare`, 
         { 
           email:email,
           verifyCode: verifyCode
@@ -358,4 +358,121 @@ export const UserApi = {
       throw new Error("랜덤키 검사 API 요청 실패");
     }
   },
+  getMentionUsers: async (nickname: string): Promise<UsersMentionResponse> => {
+    try {
+      console.log(`멘션 검색 요청: ${nickname}`);
+      
+      // API 서버 사용 불가로 인한 임시 더미 데이터 사용
+      // 실제 API가 복구되면 아래 주석 처리된 코드를 다시 활성화하세요
+      /*
+      const response = await axios.get(`localhost:8081/user/mention?nickname=`+nickname,
+        {
+          withCredentials: true
+        }
+      );
+      return response.data;
+      */
+      
+      const filteredUsers = DUMMY_USERS.filter(user => 
+        user.nickname.toLowerCase().includes(nickname.toLowerCase())
+      );
+      
+      const dummyResponse: UsersMentionResponse = {
+        users: filteredUsers
+      };
+      
+      // 네트워크 지연 시뮬레이션 (300ms)
+      await new Promise(resolve => setTimeout(resolve, 300));
+      
+      console.log('더미 데이터 반환:', dummyResponse);
+      return dummyResponse;
+    } catch (error) {
+      if (error instanceof Error)
+        throw new Error(error.message || "멘션 유저 호출 실패");
+      throw new Error("멘션 유저 요청 실패");
+    }
+  },
+  postFollowing: async (userId: number): Promise<UsersMentionResponse> => {
+    try {
+      const response = await axios.post(`localhost:8081/user/following/`+ userId,
+        {
+          withCredentials: true
+        }
+      );
+      return response.data;
+    
+    } catch (error) {
+      if (error instanceof Error)
+        throw new Error(error.message || "팔로우 호출 실패");
+      throw new Error("팔로우 요청 실패");
+    }
+  },
+  deleteFollowing: async (userId: number): Promise<UsersMentionResponse> => {
+    try {
+      const response = await axios.post(`localhost:8081/user/following/`+ userId,
+        {
+          withCredentials: true
+        }
+      );
+      return response.data;
+    
+    } catch (error) {
+      if (error instanceof Error)
+        throw new Error(error.message || "팔로우 호출 실패");
+      throw new Error("팔로우 요청 실패");
+    }
+  },
+  postFollowingAccept: async (notificationId: number): Promise<UsersMentionResponse> => {
+    try {
+      const response = await axios.post(`localhost:8081/user/following/accept/`+ notificationId,
+        {
+          withCredentials: true
+        }
+      );
+      return response.data;
+    
+    } catch (error) {
+      if (error instanceof Error)
+        throw new Error(error.message || "팔로우 호출 실패");
+      throw new Error("팔로우 요청 실패");
+    }
+  },
 };
+// getMention Users 더미 데이터
+const DUMMY_USERS: MentionUser[] = [
+  { 
+    nickname: "김철수", 
+    userId: 1, 
+    profilePath: "https://randomuser.me/api/portraits/men/1.jpg" 
+  },
+  { 
+    nickname: "이영희", 
+    userId: 2, 
+    profilePath: "https://randomuser.me/api/portraits/women/2.jpg" 
+  },
+  { 
+    nickname: "박지성", 
+    userId: 3, 
+    profilePath: "https://randomuser.me/api/portraits/men/3.jpg" 
+  },
+  { 
+    nickname: "최민지", 
+    userId: 4, 
+    profilePath: "https://randomuser.me/api/portraits/women/4.jpg" 
+  },
+  { 
+    nickname: "정현우", 
+    userId: 5, 
+    profilePath: "https://randomuser.me/api/portraits/men/5.jpg" 
+  },
+  { 
+    nickname: "강다혜", 
+    userId: 6, 
+    profilePath: "https://randomuser.me/api/portraits/women/6.jpg" 
+  },
+  { 
+    nickname: "강서준", 
+    userId: 7, 
+    profilePath: "https://randomuser.me/api/portraits/men/7.jpg" 
+  }
+];

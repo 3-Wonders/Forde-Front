@@ -7,6 +7,11 @@ import "./ProfileLayout.scss";
 
 import { UserApi } from "@/api/user";
 
+import ProfileIcon from "@/assets/profile-mypage.svg"
+import AccountIcon from "@/assets/account.svg"
+import ActiveIcon from "@/assets/active.svg"
+import MyPageNavigation from "@/components/SubNavigation/MyPageNavigation/MyPageNavigation";
+
 const ProfileLayout = () => {
   const tabletSize = 992;
   const { width } = useWindowSize();
@@ -94,22 +99,8 @@ const ProfileLayout = () => {
       {header}
       <div className="profilePageContainer">
         <div className="profileInner">
-          <div className="profileLeftCard">
-            <ul className="menuList">
-              <li className="active">
-                {/* 아이콘 넣어야함  */}
-                프로필
-              </li>
-              <li>
-                {/* 아이콘 넣어야함  */}
-                계정 관리
-              </li>
-              <li>
-                {/* 아이콘 넣어야함  */}
-                활동 내역
-              </li>
-            </ul>
-          </div>
+          
+        <MyPageNavigation isActive={1} />
 
           <div className="profileCenterCard">
             <div className="profileImageWrapper">

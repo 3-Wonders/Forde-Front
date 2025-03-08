@@ -22,6 +22,7 @@ import Toolbar from "../Editor/Toolbar/Toolbar";
 import { Indent } from "@/utils/indent";
 import CustomCodeBlockLowlight from "@/utils/codeBlockIndent";
 import { YoutubeResize } from "@/utils/youtubeResize";
+import { UserApi } from "@/api/user";
 
 // 예제 사용자 데이터
 const users = [
@@ -49,14 +50,44 @@ const MentionEditor = ({
 }: EditorProps) => {
   const [content, setContent] = useState<string>("");
 
+  // 멘션 사용자 결과를 저장할 상태 추가
+  const [mentionUsers, setMentionUsers] = useState<Array<{id: string, name: string}>>([]);
+  // API 로딩 상태 추가
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
 // 멘션 제안 컴포넌트
-const renderSuggestions = () => {
+const renderSuggestions =  () => {
   return {
-    items: ({ query }: { query: string }) => {
+    items: async ({ query }: { query: string }) => {
       console.log('멘션 쿼리:', query, users);
-      return users
-        .filter(user => user.name.toLowerCase().includes(query.toLowerCase()))
-        .slice(0, 5);
+      
+      // 빈 쿼리이거나 너무 짧은 경우 API 호출 방지
+      if (!query || query.length < 1) {
+        setMentionUsers([]);
+        return [];
+      }
+      try {
+        setIsLoading(true);
+        // API 호출하여 사용자 목록 가져오기
+        const response = await UserApi.getMentionUsers(query);
+        console.log('API 응답:', response);
+        
+        // API 응답 형식에 따라 적절히 매핑
+        // 응답 구조가 다를 경우 아래 매핑 부분을 수정해야 합니다
+        const users = response.users.map((user: any) => ({
+          id: user.userId.toString(), // id는 문자열로 변환
+          name: user.nickname,
+          profilePath: user.profilePath // 프로필 이미지 경로도 저장
+        }));
+        
+        setMentionUsers(users);
+        return users.slice(0, 5); // 최대 5개만 표시
+      } catch (error) {
+        console.error('멘션 사용자 검색 오류:', error);
+        return [];
+      } finally {
+        setIsLoading(false);
+      }
     },
     render: () => {
       let component: any;
@@ -90,33 +121,41 @@ const renderSuggestions = () => {
           component = props;
           
           if (!popup) return;
-          
-          // 내용 업데이트 - CSS 클래스 적용
-          popup.innerHTML = `
-            <div class="${classes.mentionList}">
-              ${props.items.length ? 
-                props.items.map((item: any, index: number) => 
-                  `<div 
-                    class="${classes.mentionItem} ${component.selectedIndex === index ? classes.mentionItemSelected : ''}"
-                    data-index="${index}"
-                  >
-                    @${item.name}
-                  </div>`
-                ).join('') : 
-                `<div class="${classes.mentionItem}">검색 결과가 없습니다</div>`
+
+          // 내용 업데이트 - CSS 클래스 적용 및 프로필 이미지 추가
+  popup.innerHTML = `
+    <div class="${classes.mentionList}">
+      ${isLoading ? 
+        `<div class="${classes.mentionItem}">검색 중...</div>` :
+        props.items.length ? 
+          props.items.map((item: any, index: number) => 
+            `<div 
+              class="${classes.mentionItem} ${component.selectedIndex === index ? classes.mentionItemSelected : ''}"
+              data-index="${index}"
+              style="display: flex; align-items: center; padding: 8px; cursor: pointer;"
+            >
+              ${item.profilePath ? 
+                `<img src="${item.profilePath}" alt="프로필" style="width: 24px; height: 24px; border-radius: 50%; margin-right: 8px; object-fit: cover; flex-shrink: 0;">` : 
+                `<div style="width: 24px; height: 24px; border-radius: 50%; background-color: #ccc; margin-right: 8px; flex-shrink: 0;"></div>`
               }
-            </div>
-          `;
-          
-          // 클릭 이벤트 추가
-          popup.querySelectorAll(`.${classes.mentionItem}`).forEach((item: Element) => {
-            item.addEventListener('click', (e) => {
-              const index = Number((e.currentTarget as HTMLElement).dataset.index);
-              if (props.items[index]) {
-                component.command({ id: props.items[index].id, label: props.items[index].name });
-              }
-            });
-          });
+              <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">@${item.name}</span>
+            </div>`
+          ).join('') : 
+          `<div class="${classes.mentionItem}">검색 결과가 없습니다</div>`
+      }
+    </div>
+  `;
+
+  
+  // 클릭 이벤트 추가 
+  popup.querySelectorAll(`.${classes.mentionItem}`).forEach((item: Element) => {
+    item.addEventListener('click', (e) => {
+      const index = Number((e.currentTarget as HTMLElement).dataset.index);
+      if (props.items[index]) {
+        component.command({ id: props.items[index].id, label: props.items[index].name });
+      }
+    });
+  });
           
           // 댓글 에디터 요소 찾기
           const commentEditor = document.querySelector(`.${classes.editor}`);
@@ -132,7 +171,7 @@ const renderSuggestions = () => {
             const absoluteLeft = editorRect.left + scrollX;
             const absoluteTop = editorRect.top + scrollY;
             
-            // 에디터 내에서 @ 입력 위치 찾기
+            // 에디터 내에서 @ 입력 위치 찾기인데.. 음 못찾는중
             if (props.clientRect && props.clientRect.top != null) {
               const mentionLeft = props.clientRect.left + scrollX;
               const mentionTop = props.clientRect.top + scrollY;

@@ -1,7 +1,7 @@
 import { Tag } from "./tag";
 import { Uploader } from "./user";
 
-export type BoardType = "B" | "N";
+export type BoardType = "B" | "N" | "Q";
 
 export type Board = {
   boardId: number;
@@ -36,6 +36,25 @@ export type DraftBoard = {
 export type DraftBoardList = {
   drafts: DraftBoard[];
 };
+
+export type DraftBoardPost = {
+  boardType: BoardType | null;
+  title : string | null;
+  content : string | null;
+  tagIds : number[] | null;
+  thumbnail : File | null;
+  imageIds : number[] | null;
+};
+
+export type DraftBoardUpdate = {
+  boardType: BoardType | null;
+  title: string | null;
+  content: string | null;
+  tagIds?: number[] | null;
+  thumbnail?: File | null;
+  thumbnailAction: string | null;
+  imageIds?: number[] | null;
+}
 
 export type BoardItem = Pick<
   Board,

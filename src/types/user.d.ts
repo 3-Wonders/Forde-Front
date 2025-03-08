@@ -96,3 +96,14 @@ export interface PostRegisterParams {
   isEnableNotification: boolean;
   isEnableEvent: boolean;
 }
+
+export interface MentionUser  {
+  nickname: string;
+  userId: number;
+  profilePath: string;
+}
+
+export interface UsersMentionResponse  {
+  users: MentionUser[];
+}
+

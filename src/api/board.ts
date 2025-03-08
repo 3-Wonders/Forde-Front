@@ -1,4 +1,4 @@
-import { Board, BoardListWithType, DraftBoardList, RequestBoardPost, RequestBoardUpdate, UpdateBoardDetail } from "@/types/board";
+import { Board, BoardListWithType, DraftBoard, DraftBoardList, RequestBoardPost, RequestBoardUpdate, UpdateBoardDetail } from "@/types/board";
 
 import Bitcoin from "@assets/bitcoin.png";
 import axios from "axios";
@@ -11,7 +11,7 @@ export const BoardApi = {
     
     // try { 
     //   const response = await axios.get(
-    //     `http://localhost:8081/recent`,  
+    //     `http://localhost:8081/recent?page=`+page+`&count=`+count,  
     //     {
     //       withCredentials: true
     //     }
@@ -932,6 +932,81 @@ public class Main {
       return response.data;
     } catch (error) {
       console.error("특정 게시글을 업데이트 하던 중 오류 발생:", error);
+      throw error;
+    }
+  },
+
+  getDraft: async () : Promise<DraftBoardList> => {
+    try{
+      const response = await axios.get(
+        `http://localhost:8081/draft/`,
+        { withCredentials: true },
+      );
+      return response.data;
+    } catch(er) {
+      console.log(" 임시저장 게시글 가져오기 중 에러 발생 : " + er );
+      throw er;
+    }
+  },
+
+  postDraft: async (postData : RequestBoardPost) : Promise<any> => {
+    try{
+      const response = await axios.post(
+        `http://localhost:8081/draft/`, 
+        {
+          boardType: postData.boardType,
+          title: postData.title,
+          content: postData.content,
+          tagIds: postData.tagIds,
+          thumbnail: postData.thumbnail,
+          imageIds: postData.imageIds
+        },
+        {
+          withCredentials: true
+        }
+      );
+      return response.data;
+    } catch(er) {
+      console.log(" 임시저장 게시글 저장 중 에러 발생 : " + er );
+      throw er;
+    }
+  },
+
+  updateDraft: async (draftId: number, updateData: RequestBoardUpdate): Promise<any> => {
+    try { 
+      const response = await axios.patch(
+        `http://localhost:8081/draft/`+draftId, 
+        {
+          boardType: updateData.boardType,
+          title: updateData.title,
+          content: updateData.content,
+          tagIds: updateData.tagIds,
+          thumbnail: updateData.thumbnail,
+          thumbnailAction: updateData.thumbnailAction,
+          imageIds: updateData.imageIds
+        },
+        {
+          withCredentials: true
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("임시 저장 업데이트 하던 중 오류 발생:", error);
+      throw error;
+    }
+  },
+  
+  deleteDraft: async (draftId: number) => {
+    try { 
+      const response = await axios.delete(
+        `http://localhost:8081/draft/`+draftId,  
+        {
+          withCredentials: true
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("임시 저장글을 삭제하던 중 오류 발생:", error);
       throw error;
     }
   },

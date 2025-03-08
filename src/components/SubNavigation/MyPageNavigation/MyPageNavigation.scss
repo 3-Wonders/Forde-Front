@@ -14,7 +14,7 @@ $checked-orange: #FF4401;
 }
 
 .leftCard {
-  width: 200px;
+  width: 250px;
 
   .cardTitle {
     margin: 0 0 1rem 0;
@@ -44,8 +44,8 @@ $checked-orange: #FF4401;
 
       &.active {
         background-color: rgba(255, 255, 255, 0.1);
-        border-radius: 4px;
-        padding-left: 0.5rem;
+        border-radius: 3px;
+        // padding-left: 0.5rem;
       }
     }
   }

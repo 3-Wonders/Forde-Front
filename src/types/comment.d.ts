@@ -20,3 +20,12 @@ export type ChildCommentList = {
   comments: ChildComment[];
   total: number;
 };
+
+export interface UserReference {
+  userId: number;
+}
+
+export interface PostChildCommentRequest {
+  users: UserReference[];
+  content: string;
+}

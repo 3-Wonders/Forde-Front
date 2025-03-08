@@ -30,6 +30,11 @@ const ActivateLayout = () => {
 
   const handleFollowClick = () => {
     setIsAnimated(true);
+    if ( isFollowing ){
+      UserApi.postFollowing(1); // userId 받아와야함
+    } else {
+      UserApi.deleteFollowing(1);
+    }
     setIsFollowing((prev) => !prev);
   };
 
@@ -56,7 +61,7 @@ const ActivateLayout = () => {
     useEffect(() => {
         const fetchUserData = async () => {
           try {
-            const userData = await UserApi.getOneUser();
+            const userData = await UserApi.getOneUser(1);
             setNickName(userData.nickname);
             setDescription(userData.description);
             setProfilePath(userData.profilePath);
