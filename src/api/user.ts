@@ -60,18 +60,19 @@ export const UserApi = {
 
   },
   getSnsInfos: async (): Promise<SnsInfos> => {
-    // try { 
-    //   const response = await axios.get(
-    //     `http://localhost:8081/user/sns`,  
-    //     {
-    //       withCredentials: true
-    //     }
-    //   );
-    //   return response.data;
-    // } catch (error) {
-    //   console.error("유저 정보 가져오던 중 오류 발생:", error);
-    //   throw error;
-    // }
+    try { 
+      const response = await axios.get(
+        `http://localhost:8080/user/account`,  
+        {
+          withCredentials: true
+        }
+      );
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error("유저 정보 가져오던 중 오류 발생:", error);
+      throw error;
+    }
     return {
       userId: 2,
       email: "seungyong20@naver.com",

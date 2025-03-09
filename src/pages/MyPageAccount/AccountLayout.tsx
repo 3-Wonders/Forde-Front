@@ -62,14 +62,14 @@ const AccountLayout = () => {
 
   const handleSocialLink = async (snsName: string) => {
     try {
-      const { snsKind, isConnect } = socialLinks[snsName];
+      const isConnect = socialLinks[snsName];
   
       if (isConnect) {
         // await unlinkSocialAccount(snsKind);
-        alert(`${snsName} (${snsKind}) 연동 해제`);
+        alert(`${snsName} 연동 해제`);
       } else {
         // await linkSocialAccount(snsKind);
-        alert(`${snsName} (${snsKind}) 연동 완료`);
+        alert(`${snsName} 연동 완료`);
       }
   
       // setSocialLinks((prev) => ({

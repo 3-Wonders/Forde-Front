@@ -13,15 +13,15 @@ const MyPageNavigation = ({ isActive }: MyPageNavigationProps) => {
   return (
     <div className="leftCard">
       <ul className="menuList">
-        <li className={isActive === 1 ? "active" : ""}>
+        <a href="/profile"><li className={isActive === 1 ? "active" : ""}>
         <img src={ProfileIcon} alt={`아이콘`} width={28} height={28} />
-        프로필</li>
-        <li className={isActive === 2 ? "active" : ""}>
+        프로필</li></a>
+        <a href="/account"><li className={isActive === 2 ? "active" : ""}>
         <img src={AccountIcon} alt={`아이콘`} width={28} height={28} />
-        계정 관리</li>
-        <li className={isActive === 3 ? "active" : ""}>
+        계정 관리</li></a>
+        <a href="/activate"><li className={isActive === 3 ? "active" : ""}>
         <img src={ActiveIcon} alt={`아이콘`} width={28} height={28} />
-        활동 내역</li>
+        활동 내역</li></a>
       </ul>
     </div>
   );

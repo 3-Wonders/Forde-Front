@@ -26,8 +26,10 @@ const Sns = () => {
 
   const googleClientId: string = useMemo(() => import.meta.env.VITE_GOOGLE_CLIENT_ID, []);
   const googleRedirectUri: string = useMemo(() => import.meta.env.VITE_GOOGLE_REDIRECT_URI, []);
+  const googleSecretKey: string = useMemo(() => import.meta.env.VITE_GOOGLE_SECRET_KEY,[]);
 
   const githubClientId: string = useMemo(() => import.meta.env.VITE_GITHUB_CLIENT_ID, []);
+  const githubRedirectUri: string = useMemo(() => import.meta.env.VITE_GITHUB_REDIRECT_URI, []);
 
   const location = useLocation();
 
@@ -84,7 +86,8 @@ const Sns = () => {
       scope: "email profile",
     };
     const params = new URLSearchParams(config);
-    const googleUrl = `${baseUrl}?${params.toString()}`;
+    // const googleUrl = `${baseUrl}?${params.toString()}`;
+    const googleUrl = googleRedirectUri;
 
     window.location.href = googleUrl;
   }, [googleClientId, googleRedirectUri, location.pathname, showToast]);
@@ -100,13 +103,15 @@ const Sns = () => {
     const baseUrl = "https://github.com/login/oauth/authorize";
     const config = {
       client_id: githubClientId,
+      redirect_uri: githubRedirectUri,
+      response_type: "code",
       scope: "user:email read:user",
     };
     const params = new URLSearchParams(config);
     const githubUrl = `${baseUrl}?${params.toString()}`;
 
     window.location.href = githubUrl;
-  }, [githubClientId, location.pathname, showToast]);
+  }, [githubClientId, githubRedirectUri, location.pathname, showToast]);
 
   const handleLogin = useCallback(
     (event: MouseEvent<HTMLButtonElement>, snsKind: SnsKind) => {
