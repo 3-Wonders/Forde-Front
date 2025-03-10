@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import useWindowSize from "@/hooks/useWindowSize";
 import DesktopHeader from "@/components/Header/DesktopHeader/DesktopHeader";
 import MobileHeader from "@/components/Header/MobileHeader/MobileHeader";
@@ -12,6 +12,10 @@ import KakaoIcon from "@/assets/kakao.svg";
 import { UserApi } from "@/api/user";
 
 import MyPageNavigation from "@/components/SubNavigation/MyPageNavigation/MyPageNavigation";
+import { SnsNameEnum } from "@/utils/constants";
+import { useLocation } from "react-router-dom";
+
+import { SessionStorageKey } from "@/utils/constants";
 
 const AccountLayout = () => {
   const tabletSize = 992;
@@ -28,6 +32,12 @@ const AccountLayout = () => {
   const [newEmail, setNewEmail] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const [agreed, setAgreed] = useState(false);
+
+  const googleClientId: string = useMemo(() => import.meta.env.VITE_GOOGLE_CLIENT_ID, []);
+  const googleRedirectUri: string = useMemo(() => import.meta.env.VITE_GOOGLE_REDIRECT_URI, []);
+
+  
+  const location = useLocation();
   
   useEffect(() => {
     const fetchUserData = async () => {
@@ -37,7 +47,7 @@ const AccountLayout = () => {
         setEmail(userData.email);
         const links: Record<string, boolean> = {};
         for (const sns of userSnsData.snsInfos) {
-          links[sns.snsName] = sns.isConnect;
+          links[sns.snsName.toLowerCase()] = sns.isConnect;
         }
   
         setSocialLinks(links);
@@ -60,6 +70,15 @@ const AccountLayout = () => {
     }
   };
 
+    const handleGoogle = useCallback(() => {
+  
+      sessionStorage.setItem(SessionStorageKey.FAILED_REDIRECT_STATE, location.pathname);
+  
+      const googleUrl = googleRedirectUri;
+  
+      window.location.href = googleUrl;
+    }, [googleClientId, googleRedirectUri, location.pathname]);
+
   const handleSocialLink = async (snsName: string) => {
     try {
       const isConnect = socialLinks[snsName];
@@ -69,6 +88,20 @@ const AccountLayout = () => {
         alert(`${snsName} 연동 해제`);
       } else {
         // await linkSocialAccount(snsKind);
+        switch (snsName) {
+          case SnsNameEnum.KAKAO:
+            handleGoogle();
+            break;
+          case SnsNameEnum.NAVER:
+            handleGoogle();
+            break;
+          case SnsNameEnum.GOOGLE:
+            handleGoogle();
+            break;
+          case SnsNameEnum.GITHUB:
+            handleGoogle();
+            break;
+        }
         alert(`${snsName} 연동 완료`);
       }
   

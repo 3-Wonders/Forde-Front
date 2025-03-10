@@ -120,7 +120,7 @@ export const UserApi = {
   getNotification: async (): Promise<UserNotificationResponse> => {
     try {
       const response = await axios.get(
-        `http://localhost:8081/user/notification`,  
+        `http://localhost:8080/user/notification`,  
         {
           withCredentials: true
         },
@@ -141,7 +141,7 @@ export const UserApi = {
   ) => {
     try {
       const response = await axios.put(
-        `http://localhost:8081/user/notification`,  
+        `http://localhost:8080/user/notification`,  
         {
           noticeNotification,
           commentNotification,
@@ -161,13 +161,16 @@ export const UserApi = {
     }
   },
   getSocialSetting: async (
-    sessionKey: string | undefined
   ) => {
-    console.log(sessionKey);
-    return {
-      disableFollow: true,
-      disableAccount: false,
-      disableStoreSearch: true,
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/user/sns`, 
+        {withCredentials: true}
+      );
+      return response.data;
+    } catch (error) {
+      console.error("알림 상태 가져오기 중 오류 발생:", error);
+      throw error;
     }
   },
   patchSocialSetting: async (
@@ -176,12 +179,11 @@ export const UserApi = {
     disableStoreSearch: boolean,
   ) => {
     try {
-      const response = await axios.put(
-        `http://localhost:8081/sns/setting`, 
+      const response = await axios.patch(
+        `http://localhost:8080/user/sns/setting`, 
         {
-          disableFollow,
-          disableAccount,
-          disableStoreSearch
+          disableFollow: disableFollow,
+          disableAccount: disableAccount
         },
         {withCredentials: true}
       );

@@ -14,6 +14,14 @@ export const SnsKindEnum = {
   GITHUB: "1004",
 } as const;
 
+export const SnsNameEnum = {
+  KAKAO: "kakao",
+  NAVER: "naver",
+  GOOGLE: "google",
+  GITHUB: "github",
+} as const;
+
+
 export type SnsKind = (typeof SnsKindEnum)[keyof typeof SnsKindEnum];
 
 export const SessionStorageKey = {

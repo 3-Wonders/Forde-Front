@@ -4,9 +4,10 @@ import DesktopHeader from "@/components/Header/DesktopHeader/DesktopHeader";
 import MobileHeader from "@/components/Header/MobileHeader/MobileHeader";
 import "./SocialLayout.scss";
 import { UserApi } from "@/api/user";
-import Cookies from "js-cookie";
 import useAppStore from "@/stores/useAppStore"; // 전역 상태 관리 추가
 import { debounce } from 'lodash'; // 디바운스를 위해 lodash 추가
+
+
 
 // 검색 내역 관련 유틸리티 함수 추가
 const clearSearchHistory = () => {
@@ -30,22 +31,19 @@ const SocialLayout = () => {
   useEffect(() => {
     const fetchSetting = async () => {
       try {
-        const sessionKey = Cookies.get("sessionKey");
-        const data = await UserApi.getSocialSetting(sessionKey);
-       
-        setDisableAccount(data.disableAccount);
+        const data = await UserApi.getSocialSetting();
+        console.log("Acc : " + data.privateAccount);
+        console.log("fol : " + data.disableFollow);
+        setDisableAccount(data.privateAccount);
         setDisableFollow(data.disableFollow);
-        setDisableStoreSearch(data.disableStoreSearch);
-        
-        // 서버에서 가져온 disableStoreSearch 값을 전역 상태에 반영.. 둘의 값은 반대가 되어야함
-        setIsLocalHistory(!data.disableStoreSearch);
+      
       } catch (error) {
         console.error("설정 정보를 불러오는 중 오류 발생:", error);
       }
     };
 
     fetchSetting();
-  }, [setIsLocalHistory]);
+  }, []);
 
   // 1초 디바운스 걸기
   const debouncedApiCall = useCallback(
