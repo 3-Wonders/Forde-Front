@@ -26,6 +26,6 @@ export interface UserReference {
 }
 
 export interface PostChildCommentRequest {
-  users: UserReference[];
+  users: number[];
   content: string;
 }

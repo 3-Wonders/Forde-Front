@@ -95,7 +95,7 @@ export type RequestBoardUpdate = {
   title: string;
   content: string;
   tagIds?: number[];
-  thumbnail?: File;
+  thumbnail?: File | null;
   thumbnailAction: string;
   imageIds?: number[];
 }
@@ -105,6 +105,6 @@ export type RequestBoardPost = {
   title: string;
   content: string;
   tagIds?: number[];
-  thumbnail?: File;
+  thumbnail?: File | null;
   imageIds?: number[];
 }

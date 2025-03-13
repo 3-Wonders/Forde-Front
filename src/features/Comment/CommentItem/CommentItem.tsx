@@ -14,6 +14,7 @@ import Dialog from "@/components/Dialog/Dialog";
 import useUser from "@/hooks/useUser";
 
 import { getTimeAgo } from "@/utils/number";
+import { CommentApi } from "@/api/comment";
 
 type CommentItemProps = {
   comment: CommentItemType;
@@ -33,9 +34,22 @@ const CommentItem = ({ comment, boardId, isChild = false }: CommentItemProps) =>
   }, []);
 
   const handleSubmitChildComment = useCallback(
-    (content: string) => {
-      console.log("대댓글 작성 : ", comment.commentId, content);
-      setIsWriteChild(false);
+    async (content: string) => {
+      console.log(content);
+      const status = await CommentApi.postChildComment(
+        boardId,
+        comment.commentId,
+        content,
+        [] // 빈 userIds 배열 전달 (필요시 멘션된 사용자 ID 배열로 변경)
+      );      
+      
+      if (status === 201) {
+        console.log("대댓글 작성 성공!");
+        setIsWriteChild(false);
+        
+        // 댓글 목록 새로고침
+        // onCommentUpdate();
+      }
     },
     [comment.commentId],
   );
@@ -47,6 +61,7 @@ const CommentItem = ({ comment, boardId, isChild = false }: CommentItemProps) =>
   const handleUpdate = useCallback(
     (content: string) => {
       console.log("수정 : ", boardId, comment.commentId, content);
+      CommentApi.updateParentComment(boardId, comment.commentId, [], content);
       setIsUpdate(false);
     },
     [boardId, comment.commentId],
@@ -54,6 +69,7 @@ const CommentItem = ({ comment, boardId, isChild = false }: CommentItemProps) =>
 
   const handleDelete = useCallback(() => {
     console.log("삭제 : ", boardId, comment.commentId, boardId);
+    CommentApi.deleteParentComment(boardId, comment.commentId);
     setIsOpen(false);
   }, [boardId, comment.commentId]);
 
@@ -73,13 +89,14 @@ const CommentItem = ({ comment, boardId, isChild = false }: CommentItemProps) =>
       </Dialog>
       <div className={classes.item}>
         <div className={classes.top}>
-          <Link className={classes.user} to={`/account/${comment.commentId}`}>
+          { comment.uploader &&
+          (<Link className={classes.user} to={`/account/${comment.commentId}`}>
             <img src={comment.uploader.profilePath} alt="프로필 이미지 아이콘" />
             <p className={classes.nickname}>{comment.uploader.nickname}</p>
-          </Link>
+          </Link> )}
           <div className={classes.funcBox}>
             <p className={classes.createdTime}>{getTimeAgo(comment.createdTime)}</p>
-            {user?.userId === comment.uploader.userId && (
+            {comment.uploader && user?.userId === comment.uploader.userId && (
               <>
                 <button className={`${classes.btn} ${classes.update}`} onClick={handleIsUpdate}>
                   수정
@@ -90,6 +107,7 @@ const CommentItem = ({ comment, boardId, isChild = false }: CommentItemProps) =>
               </>
             )}
           </div>
+          
         </div>
         {!isUpdate ? (
           <EditorViewer className={classes.content} content={comment.content} />

@@ -8,33 +8,36 @@ import { TagApi } from "@/api/tag";
 
 const Post = () => {
   const [postSuccess, setPostSuccess] = useState<boolean>(false);
-  const [tagIds, setTagIds] = useState<number[]>([]);
   const handlePost = useCallback(async (request: RequestBoard) => {
     console.log(request);
     // TODO: Tags는 Tag[] 형태로 들어옵니다. => 따로 처리해주세요.
     
+    const newTagIds: number[] = [];
     if(request.tags && request.tags.length > 0){      
-      const newTagIds: number[] = [];
 
       for(const tag of request.tags ){
         try {
+          console.log("tagNAME : " + tag.tagName);
           const response = await TagApi.fetchSearchTags(tag.tagName);
+          console.log("response : " + response.tags);
+          console.log("response : " + response.tags.length);
+          console.log("response : " + response.tags[0]);
+          console.log("response : " + response.tags[0].tagId);
           if (response.tags && response.tags.length > 0) {
             newTagIds.push(response.tags[0].tagId); // 첫 번째 태그의 ID 추가
+            console.log("들어갔다잇~~~~~~~");
           }
         } catch (error) {
           console.error('태그 검색 중 오류 발생:', error);
         }
       }
-      setTagIds(newTagIds);
     }
-
     BoardApi.postBoard({
       boardType: request.boardType,
       title: request.title,
       content: request.content,
       thumbnail: request.thumbnail instanceof File ? request.thumbnail : undefined,
-      tagIds: tagIds,
+      tagIds: newTagIds,
       imageIds: request.imageIds ?? []
     })
 
@@ -46,3 +49,4 @@ const Post = () => {
 };
 
 export default Post;
+

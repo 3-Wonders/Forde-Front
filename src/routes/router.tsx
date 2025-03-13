@@ -27,6 +27,7 @@ import SocialLayout from "@/pages/Social/SocialLayout";
 import NoticeLayout from "@/pages/Notice/NoticeLayout";
 import ActivateLayout from "@/pages/MyPageActive/ActiveLayout";
 import OtherActivateLayout from "@/pages/OtherActivate/OtherActiveLayout";
+import Search from "@/pages/Search/Search";
 
 /**
  * router 파일은 어떤 주소에 어떤 pages/[filename].tsx가 띄워질지 정하는 파일입니다.
@@ -52,6 +53,10 @@ const router = createBrowserRouter([
       {
         path: "/follow",
         element: <Follow />,
+      },
+      {
+        path: "/search",
+        element: <Search />,
       },
       {
         path: "/board/:boardId",

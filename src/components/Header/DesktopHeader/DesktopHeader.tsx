@@ -20,6 +20,7 @@ import Modal from "@/components/Modal/Modal";
 
 import useUser from "@/hooks/useUser";
 import useAppStore from "@/stores/useAppStore";
+import { BoardApi } from "@/api/board";
 
 // 검색 내역 관련 유틸리티 함수들
 const getSearchHistory = (): string[] => {
@@ -86,6 +87,7 @@ const DesktopHeader = () => {
   const onSearch = useCallback(() => {
     if (keyword.trim()) {
       navigate(`/search?keyword=${keyword}`, { preventScrollReset: false });
+      
       
       // 검색 기록 저장 (isLocalHistory가 true일 때만)
       if (isLocalHistory) {

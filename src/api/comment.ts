@@ -4,17 +4,18 @@ import axios from "axios";
 export const CommentApi = {
   fetchParentComments: async (boardId: number, page: number, count: number): Promise<ParentCommentList> => {
     console.log("Fetch parent comments : ", boardId, page, count);
-    // try{
-    //   const response = await axios.get(
-    //     `http://localhost:8081/board/`+boardId+`/comment?page=` + page + `&count=` + count,
-    //     { withCredentials : true }
-    //   );
+    try{
+      const response = await axios.get(
+        `http://localhost:8080/board/`+boardId+`/comment?page=` + page + `&count=` + count,
+        { withCredentials : true }
+      );
 
-    //   return response.data;
-    // } catch( error ) {
-    //   console.log(" 댓글 가져오기 중 에러 : "  + error );
-    //   throw error;
-    // } 
+      console.log(response.data);
+      return response.data;
+    } catch( error ) {
+      console.log(" 댓글 가져오기 중 에러 : "  + error );
+      throw error;
+    } 
     return {
       comments: [
         {
@@ -80,14 +81,13 @@ export const CommentApi = {
   postParentComment: async (boardId: number, userIds : number[], content: string): Promise<any> => {
     try{
       const response = await axios.post(
-        `http://localhost:8081/board/`+boardId+`/comment`,
+        `http://localhost:8080/board/`+boardId+`/comment`,
         { userIds: userIds,
           content: content,
         },
         { withCredentials : true }
       );
-
-      return response.data;
+      return response.status;
     } catch( error ) {
       console.log(" 댓글 작성 중 에러 : "  + error );
       throw error;
@@ -97,7 +97,7 @@ export const CommentApi = {
   updateParentComment: async (boardId: number, commentId: number, userIds : number[], content: string): Promise<any> => {
     try{
       const response = await axios.patch(
-        `http://localhost:8081/board/`+boardId+`/comment/`+commentId,
+        `http://localhost:8080/board/`+boardId+`/comment/`+commentId,
         { userIds: userIds,
           content: content,
         },
@@ -114,7 +114,7 @@ export const CommentApi = {
   deleteParentComment: async (boardId: number, commentId: number): Promise<any> => {
     try{
       const response = await axios.delete(
-        `http://localhost:8081/board/`+boardId+`/comment/`+commentId,
+        `http://localhost:8080/board/`+boardId+`/comment/`+commentId,
         { withCredentials : true }
       );
 
@@ -133,17 +133,17 @@ export const CommentApi = {
     count: number,
   ): Promise<ChildCommentList> => {
     console.log("Fetch child comments : ", boardId, commentId, page, count);
-    // try{
-    //   const response = await axios.get(
-    //     `http://localhost:8081/board/`+boardId+`/comment/` + commentId +`?page=` + page + `&count=` + count,
-    //     { withCredentials : true }
-    //   );
+    try{
+      const response = await axios.get(
+        `http://localhost:8080/board/`+boardId+`/comment/` + commentId +`?page=` + page + `&count=` + count,
+        { withCredentials : true }
+      );
 
-    //   return response.data;
-    // } catch( error ) {
-    //   console.log(" 자식 댓글 가져오기 중 에러 : "  + error );
-    //   throw error;
-    // } 
+      return response.data;
+    } catch( error ) {
+      console.log(" 자식 댓글 가져오기 중 에러 : "  + error );
+      throw error;
+    } 
     return {
       comments: [
         {
@@ -170,20 +170,22 @@ export const CommentApi = {
       total: 16,
     };
   },
-
-  postChildComment: async (requestData: PostChildCommentRequest, boardId: number, commentId: number, content: string): Promise<any> => {
-    try{
+  postChildComment: async (boardId: number, commentId: number, content: string, userIds: number[] = []): Promise<number> => {
+    try {
       const response = await axios.post(
-        `http://localhost:8081/board/`+boardId+`/comment/` + commentId,
-        { requestData },
-        { withCredentials : true }
+        `http://localhost:8080/board/${boardId}/comment/${commentId}`,
+        {
+          content: content,
+          userIds: userIds
+        },
+        { withCredentials: true }
       );
 
-      return response.data;
-    } catch( error ) {
-      console.log(" 대댓글 작성 중 에러 : "  + error );
+      return response.status;
+    } catch (error) {
+      console.log("대댓글 작성 중 에러: ", error);
       throw error;
-    } 
+    }
   },
 
 };

@@ -22,6 +22,7 @@ import Dialog from "../Dialog/Dialog";
 import Draft from "../Draft/Draft";
 
 import { checkAltValue } from "@/utils/doc";
+import { TagApi } from "@/api/tag";
 
 type PostFormProps = {
   postSuccess: boolean;
@@ -32,6 +33,8 @@ type PostFormProps = {
 const PostForm = ({ postSuccess, onPost, boardId }: PostFormProps) => {
   const navigate = useNavigate();
   const { showToast, ToastElement } = useToast();
+  const [isDraft,setIsDraft] = useState<boolean>(false);
+  const [draftId, setDraftId] = useState<number | null>(null);
   const { user, isLoaded } = useUser();
   const { data: board, isError } = useQuery<UpdateBoardDetail | null>({
     queryKey: ["board", boardId],
@@ -87,6 +90,7 @@ const PostForm = ({ postSuccess, onPost, boardId }: PostFormProps) => {
 
   const handleDeleteDraft = useCallback((draftId: number) => {
     // TODO: 임시 저장 삭제 API 호출
+    BoardApi.deleteDraft(draftId);
     console.log("delete draft : ", draftId);
   }, []);
 
@@ -108,6 +112,8 @@ const PostForm = ({ postSuccess, onPost, boardId }: PostFormProps) => {
       });
 
       setChangeContent(filteredDraft.content || "");
+      setIsDraft(true);
+      setDraftId(draftId);
     },
     [drafs?.drafts, showToast],
   );
@@ -116,10 +122,50 @@ const PostForm = ({ postSuccess, onPost, boardId }: PostFormProps) => {
     event.preventDefault();
   }, []);
 
-  const handleSaveDraft = useCallback(() => {
+  const handleSaveDraft = useCallback(async () => {
     // TODO: 임시 저장 API 호출
     console.log(request);
+    const newTagIds: number[] = [];
+    if(request.tags && request.tags.length > 0){      
+
+      for(const tag of request.tags ){
+        try {
+          console.log("tagNAME : " + tag.tagName);
+          const response = await TagApi.fetchSearchTags(tag.tagName);
+          console.log("response : " + response.tags);
+          console.log("response : " + response.tags.length);
+          console.log("response : " + response.tags[0]);
+          console.log("response : " + response.tags[0].tagId);
+          if (response.tags && response.tags.length > 0) {
+            newTagIds.push(response.tags[0].tagId); 
+          }
+        } catch (error) {
+          console.error('태그 검색 중 오류 발생:', error);
+        }
+      }
+    }
+    if(!isDraft){
+      BoardApi.postDraft({
+        boardType: request.boardType,
+        title: request.title,
+        content: request.content,
+        tagIds: newTagIds,
+        thumbnail: request.thumbnail instanceof File ? request.thumbnail : null,
+        imageIds: request.imageIds
+      });
+    } else if(draftId != null) {
+      BoardApi.updateDraft(draftId, {
+        boardType: request.boardType,
+        title: request.title,
+        content: request.content,
+        tagIds: newTagIds,
+        thumbnail: request.thumbnail instanceof File ? request.thumbnail : null,
+        thumbnailAction: thumbnailAction,
+        imageIds: request.imageIds
+      });
+    }
   }, [request]);
+  
 
   const handlePost = useCallback(
     (event: FormEvent) => {

@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import classes from "./BoardDetail.module.scss";
@@ -26,6 +26,7 @@ import { UserApi } from "@/api/user";
 const BoardDetail = () => {
   const { user } = useUser();
   const params = useParams<{ boardId: string }>();
+  const navigate = useNavigate();
   const boardId: number = useMemo(() => {
     return params.boardId ? +params.boardId : 0;
   }, [params]);
@@ -45,11 +46,12 @@ const BoardDetail = () => {
 
   const handleUpdate = useCallback(async () => {
     try {
-      BoardApi.fetchBoardDetailByDelete(boardId); // 업데이트로 변경해야함.
+      // BoardApi.fetchBoardDetailByDelete(boardId); // 업데이트로 변경해야함.
+      navigate(`/update/${boardId}`, { preventScrollReset: false });
     } catch (error) {
       console.error(error);
     }
-  }, [boardId]);
+  }, [boardId, navigate]);
 
   const handleDelete = useCallback(async () => {
     try {

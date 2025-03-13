@@ -14,13 +14,14 @@ const Update = () => {
   const boardId: number = useMemo(() => {
     return params.boardId ? +params.boardId : 0;
   }, [params]);
-
+  console.log(boardId);
   const handlePost = useCallback(async (request: RequestBoard, thumbnailAction?: string) => {
     console.log(request);
+    
     // TODO: Tags는 Tag[] 형태로 들어옵니다. => 따로 처리해주세요.
 
+    const newTagIds: number[] = [];
     if(request.tags && request.tags.length > 0){      
-      const newTagIds: number[] = [];
 
       for(const tag of request.tags ){
         try {
@@ -41,7 +42,7 @@ const Update = () => {
       content: request.content,
       thumbnail: request.thumbnail instanceof File ? request.thumbnail : undefined,
       thumbnailAction: thumbnailAction != null ? thumbnailAction : "KEEP", // default를 keep으로 설정
-      tagIds: tagIds,
+      tagIds: newTagIds,
       imageIds: request.imageIds ?? []
     })
 

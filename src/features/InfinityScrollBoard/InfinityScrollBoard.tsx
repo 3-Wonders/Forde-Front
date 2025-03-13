@@ -14,10 +14,11 @@ import { getNextPagination } from "@/utils/pagination";
 interface InfinityScrollBoardProps {
   count: number;
   queryKey: QueryKey;
-  fetchFunction: (params: { page: number; count: number }) => Promise<BoardListWithType>;
+  fetchFunction: (params: { page: number; count: number; keyword?: string }) => Promise<BoardListWithType>;
+  keyword? : string;
 }
 
-const InfinityScrollBoard = ({ queryKey, fetchFunction, count }: InfinityScrollBoardProps) => {
+const InfinityScrollBoard = ({ queryKey, fetchFunction, count, keyword }: InfinityScrollBoardProps) => {
   const { data, isLoading, isFetching, fetchNextPage, hasNextPage } = useInfiniteQuery<BoardListWithType>({
     queryKey,
     initialData: undefined,
@@ -31,7 +32,7 @@ const InfinityScrollBoard = ({ queryKey, fetchFunction, count }: InfinityScrollB
       });
     },
     queryFn: async ({ pageParam: page = 1 }) => {
-      return await fetchFunction({ page: page as number, count });
+      return await fetchFunction({ page: page as number, count, keyword});
     },
   });
 

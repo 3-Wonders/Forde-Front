@@ -116,6 +116,25 @@ export const BoardApi = {
 
     return recentBoards;
   },
+  fetchRecentBoardAndNewsWithKeyword: async ({ page, count, keyword }: { page: number; count: number; keyword?: string; }) => {
+    
+    try { 
+      const endpoint = keyword 
+      ? `http://localhost:8080/board/search?page=${page}&count=${count}&keyword=${encodeURIComponent(keyword)}`
+      : `http://localhost:8080/board?page=${page}&count=${count}`;
+      const response = await axios.get(
+        endpoint,  
+        {
+          withCredentials: true
+        }
+      );
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error("검색 가져오던 중 오류 발생:", error);
+      throw error;
+    }
+  },
   fetchRecentNews: async ({ page, count }: { page: number; count: number }) => {
     console.log(page, count);
 
@@ -507,18 +526,18 @@ export const BoardApi = {
   },
   fetchPopularBoards: async () => {
     
-    // try { 주석 풀어서 테스트해야함.
-    //   const response = await axios.get(
-    //     `http://localhost:8081/board/popular`,  
-    //     {
-    //       withCredentials: true
-    //     }
-    //   );
-    //   return response.data;
-    // } catch (error) {
-    //   console.error("추천 게시글을 가져오던 중 오류 발생:", error);
-    //   throw error;
-    // }
+    try { 
+      const response = await axios.get(
+        `http://localhost:8080/board/popular`,  
+        {
+          withCredentials: true
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("추천 게시글을 가져오던 중 오류 발생:", error);
+      throw error;
+    }
     return {
       boards: [
         {
@@ -563,18 +582,18 @@ export const BoardApi = {
   fetchBoardDetail: async (boardId: number): Promise<Board> => {
     console.log("fetch Board Detail : ", boardId);
 
-    // try { 
-    //   const response = await axios.get(
-    //     `http://localhost:8081/board/`+boardId,  
-    //     {
-    //       withCredentials: true
-    //     }
-    //   );
-    //   return response.data;
-    // } catch (error) {
-    //   console.error("특정 게시글을 가져오던 중 오류 발생:", error);
-    //   throw error;
-    // }
+    try { 
+      const response = await axios.get(
+        `http://localhost:8080/board/`+boardId,  
+        {
+          withCredentials: true
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("특정 게시글을 가져오던 중 오류 발생:", error);
+      throw error;
+    }
     return {
       boardId: 1,
       boardType: "N",
@@ -739,18 +758,18 @@ activityFile.text = """
   },
   fetchBoardDetailByUpdate: async (boardId: number): Promise<UpdateBoardDetail> => {
     console.log("fetch Board Detail : ", boardId);
-    // try { 
-    //   const response = await axios.get(
-    //     `http://localhost:8081/board/`+boardId, 
-    //     {
-    //       withCredentials: true
-    //     }
-    //   );
-    //   return response.data;
-    // } catch (error) {
-    //   console.error("특정 게시글을 가져오던던 중 오류 발생:", error);
-    //   throw error;
-    // }
+    try { 
+      const response = await axios.get(
+        `http://localhost:8080/board/`+boardId, 
+        {
+          withCredentials: true
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("특정 게시글을 가져오던던 중 오류 발생:", error);
+      throw error;
+    }
     return {
       boardId: 1,
       boardType: "N",
@@ -782,101 +801,57 @@ public class Main {
   },
   fetchDraftBoards: async (): Promise<DraftBoardList> => {
     
-    // try { 
-    //   const response = await axios.post(
-    //     `http://localhost:8081/draft,  
-    //     {
-    //       withCredentials: true
-    //     }
-    //   );
-    //   return response.data;
-    // } catch (error) {
-    //   console.error("특정 게시글을 임시저장 중 오류 발생:", error);
-    //   throw error;
-    // }
-    return {
-      drafts: [
+    try { 
+      const response = await axios.get(
+        `http://localhost:8080/draft`,  
         {
-          draftId: 1,
-          boardType: "N",
-          title: null,
-          content: `<h3 style="margin-left: 0px !important">알고리즘 테스트 1에 대한 설명입니다.</h3><p style="margin-left: 0px !important">이번 알고리즘은 굉장히 쉬운 산수 문제입니다.</p><p style="margin-left: 0px !important">두 수를 입력받고 두 수의 합을 출력하면 되는 문제입니다.</p><p style="margin-left: 0px !important">예를 들어, 1 + 1은 2라는 결과 값이 나오면 됩니다.</p><p style="margin-left: 0px !important">테스트 케이스는 다음과 같습니다.</p><table><tbody><tr><td colspan="1" rowspan="1"><p style="margin-left: 0px !important"><strong>입력</strong></p></td><td colspan="1" rowspan="1" colwidth="628"><p style="margin-left: 0px !important"><strong>출력</strong></p></td></tr><tr><td colspan="1" rowspan="1"><p style="margin-left: 0px !important">1,1</p></td><td colspan="1" rowspan="1" colwidth="628"><p style="margin-left: 0px !important">2</p></td></tr><tr><td colspan="1" rowspan="1"><p style="margin-left: 0px !important">2,3</p></td><td colspan="1" rowspan="1" colwidth="628"><p style="margin-left: 0px !important">5</p></td></tr><tr><td colspan="1" rowspan="1"><p style="margin-left: 0px !important">4,5</p></td><td colspan="1" rowspan="1" colwidth="628"><p style="margin-left: 0px !important">9</p></td></tr><tr><td colspan="1" rowspan="1"><p style="margin-left: 0px !important">4,2</p></td><td colspan="1" rowspan="1" colwidth="628"><p style="margin-left: 0px !important">6</p></td></tr></tbody></table><hr><p style="margin-left: 0px !important">숫자를 입력받기 위해서는 Scanner를 사용하면 됩니다.</p><pre><code class="language-java">import java.util.Scanner;
-
-public class Main {
-  public static void main(String[] args) {
-    Scanner s = new Scanner(System.in);
-    int a = s.nextInt();
-  }
-}</code></pre><p style="margin-left: 0px !important">주의하실 점은 <u>import</u>를 꼭 해줘야 하는 겁니다!</p><p style="margin-left: 0px !important"></p><p style="margin-left: 0px !important">바로 정답을 보겠습니다.</p><pre><code class="language-java">import java.util.Scanner;
-
-public class Main {
-  public static void main(String[] args) {
-    Scanner s = new Scanner(System.in);
-    int a = s.nextInt();
-    int b = s.nextInt();
-
-    System.out.println(a + b);
-  }
-}</code></pre>`,
-          thumbnail: null,
-          tags: [
-            { tagId: 1, tagName: "finace" },
-            { tagId: 2, tagName: "bitcoin" },
-          ],
-          imageIds: null,
-          createdTime: "2024-08-17 12:30:45",
-        },
-        {
-          draftId: 2,
-          boardType: "B",
-          title: "타이틀",
-          content: null,
-          thumbnail: "https://avatars.githubusercontent.com/seungyong",
-          tags: null,
-          imageIds: [1, 2, 3],
-          createdTime: "2024-08-15 09:30:45",
-        },
-      ],
-    };
+          withCredentials: true
+        }
+      );  
+      const draftsArray = response.data;
+      
+      return {
+        drafts: Array.isArray(draftsArray) ? draftsArray : []
+      };
+    } catch (error) {
+      console.error("특정 게시글을 임시저장 중 오류 발생:", error);
+      throw error;
+    }
   },
   likeBoard: async (boardId: number) => {
-    console.log("like", boardId);
-    
-    // try { 
-    //   const response = await axios.post(
-    //     `http://localhost:8081/board/`+boardId+`/like`,  
-    //     {
-    //       withCredentials: true
-    //     }
-    //   );
-    //   return response.data;
-    // } catch (error) {
-    //   console.error("특정 게시글을 가져오던 중 오류 발생:", error);
-    //   throw error;
-    // }
+    try { 
+      const response = await axios.post(
+        `http://localhost:8080/board/`+boardId+`/like`,  
+        {
+          withCredentials: true
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("좋아요 가져오던 중 오류 발생:", error);
+      throw error;
+    }
   },
   unLikeBoard: async (boardId: number) => {
-    console.log("unlike", boardId);
-    
-    // try { 
-    //   const response = await axios.delete(
-    //     `http://localhost:8081/board/`+boardId+`/like`,  
-    //     {
-    //       withCredentials: true
-    //     }
-    //   );
-    //   return response.data;
-    // } catch (error) {
-    //   console.error("특정 게시글을 가져오던 중 오류 발생:", error);
-    //   throw error;
-    // }
+    try { 
+      const response = await axios.delete(
+        `http://localhost:8080/board/`+boardId+`/like`,  
+        {
+          withCredentials: true
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("특정 게시글을 가져오던 중 오류 발생:", error);
+      throw error;
+    }
   },
   fetchBoardDetailByDelete: async (boardId: number) => {
     console.log("delete", boardId);
     
     try { 
       const response = await axios.delete(
-        `http://localhost:8081/board/`+boardId,  
+        `http://localhost:8080/board/`+boardId,  
         {
           withCredentials: true
         }
@@ -888,25 +863,52 @@ public class Main {
     }
   },
 
-  fetchBoardUpdate: async (boardId: number, updateData: RequestBoardUpdate): Promise<UpdateBoardDetail> => {
+  fetchBoardUpdate: async (boardId: number, postData: RequestBoardUpdate): Promise<UpdateBoardDetail> => {
     console.log("fetch Board Detail : ", boardId);
     try { 
-      const response = await axios.patch(
-        `http://localhost:8081/board/`+boardId, 
-        {
-          boardType: updateData.boardType,
-          title: updateData.title,
-          content: updateData.content,
-          tagIds: updateData.tagIds,
-          thumbnail: updateData.thumbnail,
-          thumbnailAction: updateData.thumbnailAction,
-          imageIds: updateData.imageIds
-        },
-        {
-          withCredentials: true
+        // FormData 객체 생성
+        const formData = new FormData();
+  
+        // 일반 데이터 추가
+        formData.append('boardType', postData.boardType);
+        formData.append('title', postData.title);
+        formData.append('content', postData.content);
+        
+        // tagIds 배열 처리 - Spring 배열 파라미터 형식으로 변경
+        if (postData.tagIds && postData.tagIds.length > 0) {
+          postData.tagIds.forEach(tagId => {
+            formData.append('tagIds', tagId.toString());
+          });
         }
-      );
-      return response.data;
+        
+        // imageIds 배열 처리 - 동일한 방식 적용
+        if (postData.imageIds && postData.imageIds.length > 0) {
+          postData.imageIds.forEach(imageId => {
+            formData.append('imageIds', imageId.toString());
+          });
+        }
+        
+        // 파일 추가 (thumbnail이 있는 경우에만)
+        if (postData.thumbnail) {
+          formData.append('thumbnail', postData.thumbnail);
+        }      
+        
+        if (postData.thumbnailAction) {
+          formData.append('thumbnailAction', postData.thumbnailAction);
+        }
+        
+        // multipart/form-data로 전송
+        const response = await axios.patch(
+          `http://localhost:8080/board/`+boardId, 
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+            withCredentials: true
+          }
+        );
+        return response.data;
     } catch (error) {
       console.error("특정 게시글을 업데이트 하던 중 오류 발생:", error);
       throw error;
@@ -914,32 +916,64 @@ public class Main {
   },
 
   postBoard: async (postData: RequestBoardPost): Promise<any> => {
-    try { 
+    try {
+      // FormData 객체 생성
+      const formData = new FormData();
+      
+      // 일반 텍스트 데이터 추가
+      formData.append('boardType', postData.boardType);
+      formData.append('title', postData.title);
+      formData.append('content', postData.content);
+      
+      // tagIds 배열 처리 - Spring 배열 파라미터 형식으로 변경
+      if (postData.tagIds && postData.tagIds.length > 0) {
+        // 각 태그 ID를 동일한 이름으로 여러 번 추가
+        postData.tagIds.forEach(tagId => {
+          formData.append('tagIds', tagId.toString());
+        });
+      }
+      
+      // imageIds 배열 처리 - 동일한 방식 적용
+      if (postData.imageIds && postData.imageIds.length > 0) {
+        postData.imageIds.forEach(imageId => {
+          formData.append('imageIds', imageId.toString());
+        });
+      }
+      
+      // 파일 데이터 추가
+      if (postData.thumbnail instanceof File) {
+        formData.append('thumbnail', postData.thumbnail);
+      }
+      
+      // FormData 내용 확인 (디버깅용)
+      for (let pair of formData.entries()) {
+        console.log(pair[0] + ': ' + pair[1]);
+      }
+      
+      // 요청 전송
       const response = await axios.post(
-        `http://localhost:8081/board/`, 
+        `http://localhost:8080/board`, 
+        formData,
         {
-          boardType: postData.boardType,
-          title: postData.title,
-          content: postData.content,
-          tagIds: postData.tagIds,
-          thumbnail: postData.thumbnail,
-          imageIds: postData.imageIds
-        },
-        {
-          withCredentials: true
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          }
         }
       );
+      
       return response.data;
     } catch (error) {
-      console.error("특정 게시글을 업데이트 하던 중 오류 발생:", error);
+      console.error("특정 게시글을 추가 하던 중 오류 발생:", error);
       throw error;
     }
   },
+  
 
   getDraft: async () : Promise<DraftBoardList> => {
     try{
       const response = await axios.get(
-        `http://localhost:8081/draft/`,
+        `http://localhost:8080/draft`,
         { withCredentials: true },
       );
       return response.data;
@@ -949,43 +983,95 @@ public class Main {
     }
   },
 
-  postDraft: async (postData : RequestBoardPost) : Promise<any> => {
-    try{
+  postDraft: async (postData: RequestBoardPost): Promise<any> => {
+    try {
+      // FormData 객체 생성
+      const formData = new FormData();
+      
+      // 일반 데이터 추가
+      formData.append('boardType', postData.boardType);
+      formData.append('title', postData.title);
+      formData.append('content', postData.content);
+      
+      // tagIds 배열 처리 - Spring 배열 파라미터 형식으로 변경
+      if (postData.tagIds && postData.tagIds.length > 0) {
+        postData.tagIds.forEach(tagId => {
+          formData.append('tagIds', tagId.toString());
+        });
+      }
+      
+      // imageIds 배열 처리 - 동일한 방식 적용
+      if (postData.imageIds && postData.imageIds.length > 0) {
+        postData.imageIds.forEach(imageId => {
+          formData.append('imageIds', imageId.toString());
+        });
+      }
+      
+      // 파일 추가 (thumbnail이 있는 경우에만)
+      if (postData.thumbnail) {
+        formData.append('thumbnail', postData.thumbnail);
+      }
+      
+      // multipart/form-data로 전송
       const response = await axios.post(
-        `http://localhost:8081/draft/`, 
+        `http://localhost:8080/draft`, 
+        formData,
         {
-          boardType: postData.boardType,
-          title: postData.title,
-          content: postData.content,
-          tagIds: postData.tagIds,
-          thumbnail: postData.thumbnail,
-          imageIds: postData.imageIds
-        },
-        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
           withCredentials: true
         }
       );
+      
       return response.data;
-    } catch(er) {
-      console.log(" 임시저장 게시글 저장 중 에러 발생 : " + er );
-      throw er;
+    } catch (error) {
+      console.log("임시저장 게시글 저장 중 에러 발생 : " + error);
+      throw error;
     }
   },
-
-  updateDraft: async (draftId: number, updateData: RequestBoardUpdate): Promise<any> => {
+  
+  updateDraft: async (draftId: number, postData: RequestBoardUpdate): Promise<any> => {
     try { 
+      // FormData 객체 생성
+      const formData = new FormData();
+      
+      // 일반 데이터 추가
+      formData.append('boardType', postData.boardType);
+      formData.append('title', postData.title);
+      formData.append('content', postData.content);
+      
+      // tagIds 배열 처리 - Spring 배열 파라미터 형식으로 변경
+      if (postData.tagIds && postData.tagIds.length > 0) {
+        postData.tagIds.forEach(tagId => {
+          formData.append('tagIds', tagId.toString());
+        });
+      }
+      
+      // imageIds 배열 처리 - 동일한 방식 적용
+      if (postData.imageIds && postData.imageIds.length > 0) {
+        postData.imageIds.forEach(imageId => {
+          formData.append('imageIds', imageId.toString());
+        });
+      }
+      
+      // 파일 추가 (thumbnail이 있는 경우에만)
+      if (postData.thumbnail) {
+        formData.append('thumbnail', postData.thumbnail);
+      }      
+      
+      if (postData.thumbnailAction) {
+        formData.append('thumbnailAction', postData.thumbnailAction);
+      }
+      
+      // multipart/form-data로 전송
       const response = await axios.patch(
-        `http://localhost:8081/draft/`+draftId, 
+        `http://localhost:8080/draft/`+draftId, 
+        formData,
         {
-          boardType: updateData.boardType,
-          title: updateData.title,
-          content: updateData.content,
-          tagIds: updateData.tagIds,
-          thumbnail: updateData.thumbnail,
-          thumbnailAction: updateData.thumbnailAction,
-          imageIds: updateData.imageIds
-        },
-        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
           withCredentials: true
         }
       );
@@ -999,7 +1085,7 @@ public class Main {
   deleteDraft: async (draftId: number) => {
     try { 
       const response = await axios.delete(
-        `http://localhost:8081/draft/`+draftId,  
+        `http://localhost:8080/draft/`+draftId,  
         {
           withCredentials: true
         }
