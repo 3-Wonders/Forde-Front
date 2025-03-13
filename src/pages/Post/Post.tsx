@@ -17,15 +17,9 @@ const Post = () => {
 
       for(const tag of request.tags ){
         try {
-          console.log("tagNAME : " + tag.tagName);
           const response = await TagApi.fetchSearchTags(tag.tagName);
-          console.log("response : " + response.tags);
-          console.log("response : " + response.tags.length);
-          console.log("response : " + response.tags[0]);
-          console.log("response : " + response.tags[0].tagId);
           if (response.tags && response.tags.length > 0) {
             newTagIds.push(response.tags[0].tagId); // 첫 번째 태그의 ID 추가
-            console.log("들어갔다잇~~~~~~~");
           }
         } catch (error) {
           console.error('태그 검색 중 오류 발생:', error);

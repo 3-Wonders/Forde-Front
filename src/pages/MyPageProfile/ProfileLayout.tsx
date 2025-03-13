@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import useWindowSize from "@/hooks/useWindowSize";
 import DesktopHeader from "@/components/Header/DesktopHeader/DesktopHeader";
 import MobileHeader from "@/components/Header/MobileHeader/MobileHeader";
@@ -9,6 +9,11 @@ import { UserApi } from "@/api/user";
 
 import MyPageNavigation from "@/components/SubNavigation/MyPageNavigation/MyPageNavigation";
 import { List } from "@mui/material";
+import TagSelect from "@/features/TagSelect/TagSelect";
+import { Tag } from "@/types/tag";
+import { RequestBoard } from "@/types/board";
+import { userState } from "@/recoil/user/atoms";
+import { TagApi } from "@/api/tag";
 
 const ProfileLayout = () => {
   const tabletSize = 992;
@@ -28,6 +33,14 @@ const ProfileLayout = () => {
   const [commentCount, setCommentCount] = useState(0);
   const [newTag, setNewTag] = useState(""); // 입력한 새 태그 값
 
+  const [request, setRequest] = useState<RequestBoard>({
+    boardType: "N",
+    title: "",
+    content: "",
+  });
+
+  const[userTags, setUserTags] = useState<Tag[]>([]);
+  
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -46,7 +59,7 @@ const ProfileLayout = () => {
           for (const tag of userData.interestedTags) {
             tags[tag.tagName] = tag.tagName;
           }
-
+        setUserTags(userData.interestedTags);
         setInterestTags(tags);
       } catch (error) {
         console.error("사용자 정보를 불러오는 중 오류 발생", error);
@@ -81,10 +94,26 @@ const ProfileLayout = () => {
   // 저장 버튼 클릭 시 API 호출
   const handleSave = async () => {
     try {
+      
+      const newTagIds: number[] = [];
+      if(userTags && userTags.length > 0){      
+  
+        for(const tag of userTags ){
+          try {
+            const response = await TagApi.fetchSearchTags(tag.tagName);
+            if (response.tags && response.tags.length > 0) {
+              newTagIds.push(response.tags[0].tagId); 
+            }
+          } catch (error) {
+            console.error('태그 검색 중 오류 발생:', error);
+          }
+        }
+      }
+
       await UserApi.updateUser({
         nickname,
         description,
-        interestTags: [1]
+        interestTags: newTagIds
       });
       alert("프로필이 성공적으로 저장되었습니다.");
     } catch (error) {
@@ -92,6 +121,11 @@ const ProfileLayout = () => {
       alert("저장 중 오류가 발생했습니다.");
     }
   };
+
+  const handleTags = useCallback((tags: Tag[]) => {
+    setUserTags(tags);
+  }, []);
+
 
   return (
     <>
@@ -132,7 +166,7 @@ const ProfileLayout = () => {
                 rows={5}
               />
             </div>
-            <div className="formGroup">
+            {/* <div className="formGroup">
               <label>관심 있는 태그</label>
               <input
                 type="text"
@@ -146,6 +180,11 @@ const ProfileLayout = () => {
                   <span key={index}>#{tag}</span>
                 ))}
               </div>
+            </div> */}
+            
+            <div className="formGroup">
+              <label>관심 있는 태그</label>
+            <TagSelect initialTags={userTags} onSelect={handleTags} />
             </div>
             <button className="saveBtn" onClick={handleSave}>저장</button>
           </div>
