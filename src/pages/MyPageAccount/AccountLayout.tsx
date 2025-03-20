@@ -13,13 +13,15 @@ import { UserApi } from "@/api/user";
 
 import MyPageNavigation from "@/components/SubNavigation/MyPageNavigation/MyPageNavigation";
 import { SnsNameEnum } from "@/utils/constants";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { SessionStorageKey } from "@/utils/constants";
 
 const AccountLayout = () => {
   const tabletSize = 992;
   const { width } = useWindowSize();
+
+  const navigate = useNavigate();
 
   const header = useMemo(() => {
     return width > tabletSize ? <DesktopHeader /> : <MobileHeader />;
@@ -62,9 +64,10 @@ const AccountLayout = () => {
   const handleEmailChange = async () => {
     try {
       // await updateEmail(newEmail);
-      alert("이메일이 변경되었습니다.");
-      setEmail(newEmail);
-      setNewEmail("");
+      // alert("이메일이 변경되었습니다.");
+      // setEmail(newEmail);
+      // setNewEmail("");
+      navigate("/change");
     } catch (error) {
       alert("이메일 변경 실패 :: "+error);
     }

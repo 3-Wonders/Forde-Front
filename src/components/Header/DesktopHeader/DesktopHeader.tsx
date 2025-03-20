@@ -125,7 +125,7 @@ const DesktopHeader = () => {
   }, []);
 
   const handleLogout = useCallback(() => {
-    setIsOpenProfile(false);
+    // setIsOpenProfile(false);
     logout();
   }, [logout]);
 

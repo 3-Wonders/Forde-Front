@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useMemo, useState } from "react";
+import { ChangeEvent, FormEvent, useCallback, useMemo, useState } from "react";
 import {
   TextField,
 } from "@mui/material";
@@ -13,12 +13,13 @@ import FormButton from "@/components/FormButton/FormButton";
 
 import { validationEmail } from "@/utils/validation";
 import { UserApi } from "@/api/user";
-import Cookies from "js-cookie"; // 쿠키에서 sessionKey 가져오는 넘인데 왜자꾸 빨간줄이 뜨지? -> 찾아봐야함
+import { useNavigate } from "react-router-dom";
 
 type InputKey = "email";
 
 const PasswordFind = () => {
 
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<InputDataSet<InputKey, string>>({
     email: {
       value: "",
@@ -74,23 +75,23 @@ const PasswordFind = () => {
     [isInitinal, checkValidationEmail],
   );
 
-  const handleButton = async () => {
+  const handleButton = async (event: FormEvent<HTMLFormElement>) => {
     try {
-      
-      const sessionKey = Cookies.get("sessionKey");
-      if (!sessionKey) {
-        console.error("세션 키 없음");
-        return;
-      }
+      event.preventDefault();
 
-      const response = await UserApi.postVerify(sessionKey, { email: formData.email.value });
+      const response = await UserApi.postVerify({email : formData.email.value});
+      console.log("Response :: " + response);     
       
+
       if (response.success) {
-        // 인증 성공 시 처리
-        alert("인증 번호가 발송되었습니다.");
+        
+        navigate("/password/verify", { 
+          state: { email: formData.email.value } 
+        });
+        console.log("navigate 함수 실행 완료");
       } else {
         // 인증 실패
-        alert(response.message);
+          alert("이메일 인증 요청에 실패했습니다.");
       }
     } catch (error) {
       console.error("API 호출 실패:", error);
@@ -99,7 +100,7 @@ const PasswordFind = () => {
 
   return (
     <InputLayout title="비밀번호 찾기" desc="비밀번호를 찾기 위해 가입한 이메일을 입력해주세요.">
-      <form className={classes.children}>
+      <form className={classes.children} onSubmit={handleButton}>
         <div className={classes.content}>
           <TextField
             type="email"
@@ -116,7 +117,6 @@ const PasswordFind = () => {
           text="인증 번호 발송" 
           width="70%" 
           isDisabled={isDisabled} 
-          onClick={handleButton} // 버튼 클릭 시 handleButton 호출
         />
       </form>
     </InputLayout>

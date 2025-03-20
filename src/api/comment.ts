@@ -80,13 +80,16 @@ export const CommentApi = {
 
   postParentComment: async (boardId: number, userIds : number[], content: string): Promise<any> => {
     try{
+      console.log("요시~");
       const response = await axios.post(
         `http://localhost:8080/board/`+boardId+`/comment`,
-        { userIds: userIds,
+        { 
+          userIds: userIds,
           content: content,
         },
         { withCredentials : true }
       );
+      console.log("요시2~");
       return response.status;
     } catch( error ) {
       console.log(" 댓글 작성 중 에러 : "  + error );

@@ -28,6 +28,11 @@ import NoticeLayout from "@/pages/Notice/NoticeLayout";
 import ActivateLayout from "@/pages/MyPageActive/ActiveLayout";
 import OtherActivateLayout from "@/pages/OtherActivate/OtherActiveLayout";
 import Search from "@/pages/Search/Search";
+import EmailChangeVerify from "@/pages/EmailChangeVerify/EmailChangeVerify";
+import PassowrdVerify from "@/pages/PasswordVerify/PassowrdVerify";
+import ActivateBoardLayout from "@/pages/MyPageActiveBoard/ActiveBoardLayout";
+import ActiveCommentLayout from "@/pages/MyPageActivateComments/ActiveCommentLayout";
+import ActiveLikeLayout from "@/pages/MyPageActivateLikes/ActiveLikeLayout";
 
 /**
  * router 파일은 어떤 주소에 어떤 pages/[filename].tsx가 띄워질지 정하는 파일입니다.
@@ -133,6 +138,21 @@ const router = createBrowserRouter([
     path: "/activate",
     element: <ActivateLayout />,
   },
+
+  {
+    path: "/activate/board",
+    element: <ActivateBoardLayout />,
+  },
+
+  {
+    path: "/activate/comment",
+    element: <ActiveCommentLayout />,
+  },
+
+  {
+    path: "/activate/like",
+    element: <ActiveLikeLayout />,
+  },
   {
     path: "/other/activate",
     element: <OtherActivateLayout />,
@@ -148,6 +168,10 @@ const router = createBrowserRouter([
     ],
   },
   {
+    path: "/change/verify",
+    element: <EmailChangeVerify />
+  },
+  {
     path: "/password/find",
     element: <CenterLayout />,
     children: [
@@ -158,7 +182,7 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/password/edit",
+    path: "/ch-password",
     element: <CenterLayout />,
     children: [
       {
@@ -168,6 +192,10 @@ const router = createBrowserRouter([
     ],
   },
   
+  {
+    path: "/password/verify",
+    element: <PassowrdVerify />,
+  },
   {
     path: "/email/verify",
     element: <EmailVerify />,

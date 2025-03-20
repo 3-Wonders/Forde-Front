@@ -208,6 +208,7 @@ export const UserApi = {
   },
   postVerify: async ({ email }: PostVerifyParams): Promise<PostVerifyResponse> => {
     try {
+      console.log("요청1:");
       const response = await axios.post(`http://localhost:8080/user/verify`, 
         { 
           email:email // body임 
@@ -217,8 +218,16 @@ export const UserApi = {
         }
       );
 
+      const postVerifyResponse: PostVerifyResponse = {
+        success: false
+      }
+      
+      if (response.status == 204){
+        postVerifyResponse.success = true;
+      }
+
       // 응답 데이터 형식이 success와 message를 포함한다고 가정
-      return response.data;
+      return postVerifyResponse;
     } catch (error) {
       if( error instanceof Error)
         throw new Error(error.message || "API 요청 실패");
@@ -245,10 +254,51 @@ export const UserApi = {
       throw new Error("API 요청 실패");
     }
   },
-  patchPassword: async({password, randomKey}: PatchPasswordParams)=> {
+  postVerifyCompareForPassowrd: async ({email, verifyCode}: PostVerifyCompareParams): Promise<boolean> => {
     try {
-      const response = await axios.patch(`localhost:8081/user/password`, 
+      const response = await axios.post(`http://localhost:8080/user/verify/compare/password`, 
         { 
+          email:email,
+          verifyCode: verifyCode
+        },
+        {
+          withCredentials: true
+        }
+      );
+      const isSuccess = response.status == 204 ? true : false;
+      // 응답 데이터 형식이 success와 message를 포함한다고 가정
+      return isSuccess;
+    } catch (error) {
+      if( error instanceof Error)
+        throw new Error(error.message || "API 요청 실패");
+      throw new Error("API 요청 실패");
+    }
+  },
+  patchEmailWithVerify: async ({email, verifyCode}: PostVerifyCompareParams): Promise<void> => {
+    try {
+      const response = await axios.patch(`http://localhost:8080/user/verify/compare`, 
+        { 
+          email:email,
+          verifyCode: verifyCode
+        },
+        {
+          withCredentials: true
+        }
+      );
+
+      // 응답 데이터 형식이 success와 message를 포함한다고 가정
+      return response.data;
+    } catch (error) {
+      if( error instanceof Error)
+        throw new Error(error.message || "이메일 변경 API 요청 실패");
+      throw new Error("API 요청 실패");
+    }
+  },
+  patchPassword: async({email, password, randomKey}: PatchPasswordParams)=> {
+    try {
+      const response = await axios.patch(`http://localhost:8080/user/password`, 
+        { 
+          email: email,
           password:password,       
           randomKey:randomKey,
         },
@@ -258,7 +308,7 @@ export const UserApi = {
       );
 
       // 응답 데이터 형식이 success와 message를 포함한다고 가정
-      return response.data;
+      return response;
     } catch (error) {
       if( error instanceof Error)
         throw new Error(error.message || "API 요청 실패");
@@ -319,10 +369,11 @@ export const UserApi = {
       throw new Error("회원가입 API 요청 실패");
     }
   },
-  postCheckRandomKey: async (randomKey: string): Promise<void> => {
+  postCheckRandomKey: async (email: string, randomKey: string): Promise<any> => {
     try {
-      const response = await axios.post(`localhost:8081/user/password/randomkey`, 
+      const response = await axios.post(`http://localhost:8080/user/password/randomkey`, 
         { 
+          email: email,
           randomKey:randomKey,
         },
         {
@@ -330,7 +381,7 @@ export const UserApi = {
         }
       );
 
-      return response.data;
+      return response;
     } catch (error) {
       if( error instanceof Error)
         throw new Error(error.message || "랜덤키 검사 API 요청 실패");
@@ -343,14 +394,12 @@ export const UserApi = {
       
       // API 서버 사용 불가로 인한 임시 더미 데이터 사용
       // 실제 API가 복구되면 아래 주석 처리된 코드를 다시 활성화하세요
-      /*
-      const response = await axios.get(`localhost:8081/user/mention?nickname=`+nickname,
+      const response = await axios.get(`http://localhost:8080/user/mention?nickname=`+nickname,
         {
           withCredentials: true
         }
       );
       return response.data;
-      */
       
       const filteredUsers = DUMMY_USERS.filter(user => 
         user.nickname.toLowerCase().includes(nickname.toLowerCase())
@@ -416,6 +465,7 @@ export const UserApi = {
       throw new Error("팔로우 요청 실패");
     }
   },
+
 };
 // getMention Users 더미 데이터
 const DUMMY_USERS: MentionUser[] = [

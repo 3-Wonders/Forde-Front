@@ -3,7 +3,6 @@ import EmailVerifyLayout from "@/layouts/EmailVerify/EmailVerifyLayout";
 import EnterInformation from "@/components/EnterInformation/EnterInformation";
 import { useNavigate } from "react-router-dom";
 
-import Cookies from "js-cookie";
 import { UserApi } from "@/api/user";
 
 const EmailVerify = () => {

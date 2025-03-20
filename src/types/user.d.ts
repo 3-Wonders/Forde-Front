@@ -69,7 +69,6 @@ export interface SocialSetting {
 
 export interface PostVerifyResponse {
   success: boolean;
-  message: string;
 }
 
 export interface PostVerifyParams {
@@ -86,6 +85,7 @@ export interface PostLoginParams {
 }
 
 export interface PatchPasswordParams {
+  email: string;
   password: string;
   randomKey: string;
 }

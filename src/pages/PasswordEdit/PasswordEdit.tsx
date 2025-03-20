@@ -61,7 +61,7 @@ const PasswordEdit = () => {
       try {
         // URL에서 randomKey 가져오기
         const queryParams = new URLSearchParams(location.search);
-        const keyFromUrl = queryParams.get("randomKey");
+        const keyFromUrl = queryParams.get("key");
         
         if (!keyFromUrl) {
           // randomKey가 없으면 메인 페이지로 리다이렉트
@@ -72,10 +72,13 @@ const PasswordEdit = () => {
         setRandomKey(keyFromUrl);
         
         // randomKey 유효성 검사 API 호출
-        const response = await UserApi.postCheckRandomKey(keyFromUrl);
+        const response = await UserApi.postCheckRandomKey("dbstjdqls14@gmail.com",keyFromUrl);
         
         // status 204가 넘어오면 페이지를 정상적으로 표시
-        setIsValidRandomKey(true);
+        if(response.status == 204)
+          setIsValidRandomKey(true);
+        else
+          navigate("/");
       } catch (error) {
         console.error("랜덤키 검증 실패:", error);
         // 에러 발생 시 메인 페이지로 리다이렉트
@@ -153,25 +156,16 @@ const PasswordEdit = () => {
 
   const handleButton = async () => {
     try {
-      const sessionKey = Cookies.get("sessionKey");
-      if (!sessionKey) {
-        console.error("세션 키 없음");
-        return;
-      }
-
+      console.log("pw" + formData.password.value);
+      console.log("rk : " + randomKey);
       const response = await UserApi.patchPassword({ 
+        email: "dbstjdqls14@gmail.com",
         password: formData.password.value, 
         randomKey: randomKey 
       });
       
-      if (response.success) {
-        // 인증 성공 시 처리
-        alert("비밀번호가 변경 되었습니다.");
-        navigate("/");
-      } else {
-        // 인증 실패
-        alert(response.message);
-      }
+      alert("비밀번호가 변경 되었습니다.");
+      navigate("/");
     } catch (error) {
       console.error("API 호출 실패:", error);
       alert("비밀번호 변경 중 오류가 발생했습니다.");

@@ -2,6 +2,7 @@ import { Board, BoardListWithType, DraftBoard, DraftBoardList, RequestBoardPost,
 
 import Bitcoin from "@assets/bitcoin.png";
 import axios from "axios";
+import { UserApi } from "./user";
 // import axios from "axios";
 
 export const BoardApi = {
@@ -821,7 +822,7 @@ public class Main {
   likeBoard: async (boardId: number) => {
     try { 
       const response = await axios.post(
-        `http://localhost:8080/board/`+boardId+`/like`,  
+        `http://localhost:8080/board/`+boardId+`/like`,{},
         {
           withCredentials: true
         }
@@ -835,7 +836,7 @@ public class Main {
   unLikeBoard: async (boardId: number) => {
     try { 
       const response = await axios.delete(
-        `http://localhost:8080/board/`+boardId+`/like`,  
+        `http://localhost:8080/board/`+boardId+`/like`,
         {
           withCredentials: true
         }
@@ -1093,6 +1094,86 @@ public class Main {
       return response.data;
     } catch (error) {
       console.error("임시 저장글을 삭제하던 중 오류 발생:", error);
+      throw error;
+    }
+  },
+  fetchUserBoards: async ({ page, count }: { page: number; count: number;}) => {
+    console.log(page, count);
+
+    try { 
+
+      const userData = await UserApi.getIntroUser();
+
+      const response = await axios.get(
+        `http://localhost:8080/user/`+userData.userId+'/board',  
+        {
+          params: { page, count },
+          withCredentials: true
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("유저 게시글를 가져오던 중 오류 발생:", error);
+      throw error;
+    }
+  },
+  fetchUserNews: async ({ page, count }: { page: number; count: number;}) => {
+    console.log(page, count);
+
+    try { 
+
+      const userData = await UserApi.getIntroUser();
+
+      const response = await axios.get(
+        `http://localhost:8080/user/`+userData.userId+'/news',  
+        {
+          params: { page, count },
+          withCredentials: true
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("유저 뉴스를 가져오던 중 오류 발생:", error);
+      throw error;
+    }
+  },
+  fetchUserLikes: async ({ page, count }: { page: number; count: number;}) => {
+    console.log(page, count);
+
+    try { 
+
+      const userData = await UserApi.getIntroUser();
+
+      const response = await axios.get(
+        `http://localhost:8080/user/`+userData.userId+'/like',  
+        {
+          params: { page, count },
+          withCredentials: true
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("유저 게시글를 가져오던 중 오류 발생:", error);
+      throw error;
+    }
+  },
+  fetchUserComments: async ({ page, count }: { page: number; count: number;}) => {
+    console.log(page, count);
+
+    try { 
+
+      const userData = await UserApi.getIntroUser();
+
+      const response = await axios.get(
+        `http://localhost:8080/user/`+userData.userId+'/comment',  
+        {
+          params: { page, count },
+          withCredentials: true
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("유저 게시글를 가져오던 중 오류 발생:", error);
       throw error;
     }
   },

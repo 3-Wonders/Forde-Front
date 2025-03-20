@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { QueryKey, useInfiniteQuery } from "@tanstack/react-query";
 
 import { BoardListWithType, BoardWithType } from "@/types/board";
@@ -15,7 +15,7 @@ interface InfinityScrollBoardProps {
   count: number;
   queryKey: QueryKey;
   fetchFunction: (params: { page: number; count: number; keyword?: string }) => Promise<BoardListWithType>;
-  keyword? : string;
+  keyword?: string;
 }
 
 const InfinityScrollBoard = ({ queryKey, fetchFunction, count, keyword }: InfinityScrollBoardProps) => {
@@ -32,7 +32,7 @@ const InfinityScrollBoard = ({ queryKey, fetchFunction, count, keyword }: Infini
       });
     },
     queryFn: async ({ pageParam: page = 1 }) => {
-      return await fetchFunction({ page: page as number, count, keyword});
+      return await fetchFunction({ page: page as number, count, keyword });
     },
   });
 
@@ -50,7 +50,22 @@ const InfinityScrollBoard = ({ queryKey, fetchFunction, count, keyword }: Infini
           {data &&
             data.pages.map((pages: BoardListWithType) =>
               pages.boards.map((item: BoardWithType) => (
-                <BoardItem key={item.boardId} board={item} to={`/board/${item.boardId}`} />
+                <Box key={item.boardId} sx={{ marginBottom: '1rem' }}>
+                  <BoardItem board={item} to={`/board/${item.boardId}`} />
+                  {item.comment && (
+                    <Box 
+                      sx={{ 
+                        mt: 1, 
+                        ml: 2, 
+                        p: 1.5, 
+                        borderLeft: '3px solid #ff7b00',
+                        backgroundColor: 'rgba(255, 123, 0, 0.05)',
+                        borderRadius: '0 4px 4px 0'
+                      }}
+                      dangerouslySetInnerHTML={{ __html: item.comment }}
+                    />
+                  )}
+                </Box>
               )),
             )}
         </>

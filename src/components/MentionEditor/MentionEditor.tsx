@@ -38,6 +38,7 @@ type EditorProps = {
   className?: string;
   onChange: (value: string) => void;
   onChangeImage?: (imageId: number) => void;
+  onMentionUsersChange?: (userIds: number[]) => void;
 };
 
 const MentionEditor = ({
@@ -47,6 +48,7 @@ const MentionEditor = ({
   className,
   onChange,
   onChangeImage,
+  onMentionUsersChange,
 }: EditorProps) => {
   const [content, setContent] = useState<string>("");
 
@@ -54,6 +56,8 @@ const MentionEditor = ({
   const [mentionUsers, setMentionUsers] = useState<Array<{id: string, name: string}>>([]);
   // API 로딩 상태 추가
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  // 멘션된 사용자 ID를 추적하는 상태 추가
+  const [mentionedUserIds, setMentionedUserIds] = useState<number[]>([]);
 
 // 멘션 제안 컴포넌트
 const renderSuggestions =  () => {
@@ -68,18 +72,17 @@ const renderSuggestions =  () => {
       }
       try {
         setIsLoading(true);
-        // API 호출하여 사용자 목록 가져오기
         const response = await UserApi.getMentionUsers(query);
         console.log('API 응답:', response);
         
         // API 응답 형식에 따라 적절히 매핑
         // 응답 구조가 다를 경우 아래 매핑 부분을 수정해야 합니다
-        const users = response.users.map((user: any) => ({
+        const users = response.map((user: any) => ({
           id: user.userId.toString(), // id는 문자열로 변환
           name: user.nickname,
           profilePath: user.profilePath // 프로필 이미지 경로도 저장
         }));
-        
+        console.log(users);
         setMentionUsers(users);
         return users.slice(0, 5); // 최대 5개만 표시
       } catch (error) {
@@ -263,6 +266,22 @@ const renderSuggestions =  () => {
         suggestion: {
           char: '@',
           command: ({ editor, range, props }) => {
+            // 멘션 추가 시 사용자 ID를 추적
+            const userId = parseInt(props.id!, 10);
+            
+            // 중복 방지를 위해 Set 사용
+            setMentionedUserIds(prevIds => {
+              if (!isNaN(userId) && !prevIds.includes(userId)) {
+                const newIds = [...prevIds, userId];
+                // 부모 컴포넌트에 변경 알림
+                if (onMentionUsersChange) {
+                  onMentionUsersChange(newIds);
+                }
+                return newIds;
+              }
+              return prevIds;
+            });
+            
             editor
               .chain()
               .focus()
@@ -288,6 +307,23 @@ const renderSuggestions =  () => {
     ],
     onUpdate({ editor }) {
       setContent(editor.getHTML());
+      
+      // 에디터 내용이 변경될 때 멘션된 사용자 ID 확인
+      // (멘션이 삭제된 경우 처리)
+      const doc = editor.getJSON();
+      const mentionsInContent = findMentionsInDocument(doc);
+      
+      // 현재 문서에 있는 멘션 ID만 유지
+      const currentMentionIds = mentionsInContent
+        .map(mention => parseInt(mention.attrs.id, 10))
+        .filter(id => !isNaN(id));
+      
+      if (JSON.stringify(currentMentionIds) !== JSON.stringify(mentionedUserIds)) {
+        setMentionedUserIds(currentMentionIds);
+        if (onMentionUsersChange) {
+          onMentionUsersChange(currentMentionIds);
+        }
+      }
     },
     editorProps: {
       handleDOMEvents: {
@@ -317,7 +353,26 @@ const renderSuggestions =  () => {
       },
     },
   });
-
+  // 문서에서 모든 멘션 노드를 찾는 함수
+  const findMentionsInDocument = (doc: any): any[] => {
+    const mentions: any[] = [];
+    
+    const traverse = (node: any) => {
+      if (node.type === 'mention') {
+        mentions.push(node);
+      }
+      
+      if (node.content) {
+        node.content.forEach((child: any) => traverse(child));
+      }
+    };
+    
+    if (doc.content) {
+      doc.content.forEach((node: any) => traverse(node));
+    }
+    
+    return mentions;
+  };
 
 
   useEffect(() => {
@@ -325,6 +380,22 @@ const renderSuggestions =  () => {
 
     onChange(content);
   }, [editor, content, onChange]);
+
+  useEffect(() => {
+    if (!editor) return;
+    
+    const doc = editor.getJSON();
+    const mentionsInContent = findMentionsInDocument(doc);
+    
+    const currentMentionIds = mentionsInContent
+      .map(mention => parseInt(mention.attrs.id, 10))
+      .filter(id => !isNaN(id));
+    
+    setMentionedUserIds(currentMentionIds);
+    if (onMentionUsersChange) {
+      onMentionUsersChange(currentMentionIds);
+    }
+  }, [editor, onMentionUsersChange]);
 
   useEffect(() => {
     if (!editor) return;

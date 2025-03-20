@@ -10,8 +10,11 @@ type CommentProps = {
 
 const Comment = ({ boardId }: CommentProps) => {
   const handleSubmit = useCallback(
-    async (content: string) => {
-      const responseStatus = await CommentApi.postParentComment(boardId, [], content);
+    async (content: string, userIds: number[]) => {
+      console.log("요청시도");
+      console.log(content);
+      console.log(userIds);
+      const responseStatus = await CommentApi.postParentComment(boardId, userIds, content);
 
       if(responseStatus === 201){
         // 페이지 새로고침

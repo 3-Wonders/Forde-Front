@@ -13,6 +13,7 @@ import InputLayout from "@/layouts/Input/InputLayout";
 import FormButton from "@/components/FormButton/FormButton";
 
 import { validationEmail, validationPassword } from "@/utils/validation";
+import { UserApi } from "@/api/user";
 
 type InputKey = "email" | "password";
 
@@ -38,9 +39,7 @@ const EmailChange = () => {
     return (
       isInitinal ||
       formData.email.isError ||
-      formData.password.isError ||
-      formData.email.value === "" ||
-      formData.password.value === ""
+      formData.email.value === ""
     );
   }, [isInitinal, formData.email.isError, formData.email.value, formData.password.isError, formData.password.value]);
 
@@ -51,18 +50,6 @@ const EmailChange = () => {
       ...prev,
       email: {
         ...prev.email,
-        isError: !isValidate,
-      },
-    }));
-  }, []);
-
-  const checkValidationPassword = useCallback((password: string) => {
-    const isValidate = validationPassword(password);
-
-    setFormData((prev) => ({
-      ...prev,
-      password: {
-        ...prev.password,
         isError: !isValidate,
       },
     }));
@@ -84,26 +71,39 @@ const EmailChange = () => {
         case "email":
           checkValidationEmail(event.target.value);
           break;
-        case "password":
-          checkValidationPassword(event.target.value);
-          break;
       }
     },
-    [isInitinal, checkValidationEmail, checkValidationPassword],
+    [isInitinal, checkValidationEmail],
   );
 
   const handleSubmit = useCallback(
-    (event: FormEvent<HTMLFormElement>) => {
+    async (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
 
       console.table(formData);
 
-      const params = new URLSearchParams(location.search);
-      if (params.get("redirect")) {
-        navigate(params.get("redirect") as string);
-      } else {
-        navigate("/");
-      }
+      // const params = new URLSearchParams(location.search);
+      // if (params.get("redirect")) {
+      //   navigate(params.get("redirect") as string);
+      // } else {
+      //   navigate("/");
+      // }
+
+        try {
+          
+          const response = await UserApi.postVerify({email : formData.email.value});
+    
+          console.log("이메일 인증 요청 성공:", response);
+          // alert("이메일 인증번호가 발송되었습니다.");    
+          navigate("/change/verify", { 
+            state: { email: formData.email.value } 
+          });
+          console.log("navigate 함수 실행 완료");
+    
+        } catch (error) {
+          console.error("이메일 인증 요청 실패:", error);
+          alert("이메일 인증 요청에 실패했습니다.");
+        }
     },
     [formData, location.search, navigate],
   );

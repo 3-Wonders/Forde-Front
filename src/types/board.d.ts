@@ -61,7 +61,7 @@ export type BoardItem = Pick<
   "boardId" | "title" | "tags" | "isLike" | "uploader" | "commentCount" | "likeCount" | "viewCount" | "createdTime"
 > & { thumbnail: string };
 
-export type BoardWithType = BoardItem & { boardType: BoardType };
+export type BoardWithType = BoardItem & { boardType: BoardType, comment?: string};
 
 export type BoardItemList = {
   boards: BoardItem[];
