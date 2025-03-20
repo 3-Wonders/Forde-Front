@@ -90,7 +90,7 @@ const CommentItem = ({ comment, boardId, isChild = false }: CommentItemProps) =>
       <div className={classes.item}>
         <div className={classes.top}>
           { comment.uploader &&
-          (<Link className={classes.user} to={`/account/${comment.commentId}`}>
+          (<Link className={classes.user} to={`/other/activate?id=${comment.uploader.userId}`}>
             <img src={comment.uploader.profilePath} alt="프로필 이미지 아이콘" />
             <p className={classes.nickname}>{comment.uploader.nickname}</p>
           </Link> )}

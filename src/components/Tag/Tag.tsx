@@ -16,7 +16,7 @@ const Tag = ({ tags }: TagProps) => {
     (e: MouseEvent, tagName: string) => {
       e.stopPropagation();
       e.preventDefault();
-      navigate(`/tag?tagName=${tagName}`);
+      navigate(`/search/tag?tag=${tagName}`);
     },
     [navigate],
   );

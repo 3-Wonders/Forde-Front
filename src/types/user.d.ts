@@ -85,7 +85,6 @@ export interface PostLoginParams {
 }
 
 export interface PatchPasswordParams {
-  email: string;
   password: string;
   randomKey: string;
 }

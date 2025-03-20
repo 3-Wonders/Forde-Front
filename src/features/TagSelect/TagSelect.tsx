@@ -98,7 +98,7 @@ const TagSelect = ({ label = "태그 (1 ~ 3개)", initialTags, onSelect }: TagSe
               },
             },
           ]}
-          style={{ transform: "none" }}
+          style={{ transform: "none", zIndex: 1500 }}
         />
       )}
       renderTags={(value, getTagProps) =>

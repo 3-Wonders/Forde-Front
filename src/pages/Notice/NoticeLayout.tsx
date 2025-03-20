@@ -143,10 +143,14 @@ const NoticeLayout = () => {
       {header}
       <div className="socialPageContainer">
         <div className="socialInner">
-          <div className="socialLeftCard">
+        <div className="socialLeftCard">
             <ul className="socialMenu">
-              <li>소셜</li>
-              <li className="active">알림</li>
+              <a href="/setting"><li>
+                소셜
+              </li></a>
+              <a href="/notice"><li className="active">
+                알림
+              </li></a>
             </ul>
           </div>
 

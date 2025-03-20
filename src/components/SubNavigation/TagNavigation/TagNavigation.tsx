@@ -40,7 +40,7 @@ const TagNavigation = ({ tags, isLoading }: TagNavigationProps) => {
                 <li key={tag.tagId}>
                   <Link
                     data={{
-                      to: `/tag?tagName=${tag.tagName}`,
+                      to: `/search/tag?tag=${tag.tagName}`,
                       icon: theme.icon,
                       title: `#${tag.tagName}`,
                       description: `${tag.tagCount}개의 게시글이 있습니다.`,

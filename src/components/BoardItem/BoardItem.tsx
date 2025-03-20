@@ -25,7 +25,7 @@ const BoardItem = ({ board, to }: BoardItemProps) => {
     (event: MouseEvent<HTMLDivElement>) => {
       event.stopPropagation();
       event.preventDefault();
-      navigate(`/user/${board.uploader.userId}`);
+      navigate(`/other/activate?id=${board.uploader.userId}`);
     },
     [navigate, board.uploader.userId],
   );

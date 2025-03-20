@@ -35,7 +35,7 @@ const ActiveCommentLayout = () => {
         <main className={classes.main}>
             <CategoryNavigation isActive={3}/>
             <InfinityScrollBoard
-                queryKey={["recentBoards", count]}
+                queryKey={["userComment", count]}
                 fetchFunction={BoardApi.fetchUserComments}
                 count={count}
             />

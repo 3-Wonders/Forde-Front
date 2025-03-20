@@ -159,7 +159,6 @@ const PasswordEdit = () => {
       console.log("pw" + formData.password.value);
       console.log("rk : " + randomKey);
       const response = await UserApi.patchPassword({ 
-        email: "dbstjdqls14@gmail.com",
         password: formData.password.value, 
         randomKey: randomKey 
       });

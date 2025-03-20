@@ -183,7 +183,7 @@
   width: 100%;
   max-height: 300px;
   overflow-y: auto;
-  background-color: #fff;
+  background-color: $background-light-color;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   z-index: 1000;
@@ -232,13 +232,13 @@
   cursor: pointer;
   
   &:hover {
-    background-color: #f5f5f5;
+    background-color: $background-color;
   }
 }
 
 .historyText {
   font-size: 14px;
-  color: #333;
+  color: #fff;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -258,6 +258,77 @@
   }
 }
 
+.tagInput {
+  color: #3182f6; /* 태그 모드일 때 텍스트 색상 변경 */
+}
+
+.tagDropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: $background-light-color;
+  
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  margin-top: 4px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.tagHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.tagList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tagItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  
+  &:hover {
+    background-color: $background-color;
+  }
+}
+
+.tagText {
+  color: #3182f6;
+  font-weight: 500;
+}
+
+.tagCount {
+  font-size: 12px;
+  color: #888;
+}
+
+.loadingItem, .emptyItem {
+  padding: 16px;
+  text-align: center;
+  color: #888;
+  font-size: 14px;
+}
+/* DesktopHeader.module.scss에 추가 */
+
+.hasTag {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
 
 @include tablet-horizontal {
   .logo {

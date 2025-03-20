@@ -125,9 +125,12 @@ const AccountLayout = () => {
 
     try {
       setIsDeleting(true);
-      // await deleteAccount();
-      alert("계정이 삭제되었습니다.");
-      // 로그아웃 또는 리디렉션 처리
+      const isSuccess: boolean =  await UserApi.deleteUser();
+
+      if(isSuccess){
+        alert("계정이 삭제되었습니다.");
+        navigate("/");
+      } 
     } catch (error) {
       alert("계정 삭제 실패 :: " + error);
     } finally {

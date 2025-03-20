@@ -78,7 +78,7 @@ const BoardDetail = () => {
                     <img src={BackIcon} alt="뒤로가기 아이콘" width={25} height={25} />
                   </div>
                 </Link>
-                <Link to={`/account/${board.uploader.userId}`}>
+                <Link to={`/other/activate?id=${board.uploader.userId}`}>
                   <div className={classes.user}>
                     <div className={classes.profileBox}>
                       <img src={board?.uploader.profilePath} alt="사용자 프로필 사진" />

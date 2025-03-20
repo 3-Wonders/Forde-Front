@@ -1,4 +1,4 @@
-import { Board, BoardListWithType, DraftBoard, DraftBoardList, RequestBoardPost, RequestBoardUpdate, UpdateBoardDetail } from "@/types/board";
+import { Board, BoardListWithType, DraftBoard, DraftBoardList, RequestBoardPost, RequestBoardUpdate, RequestDummyImagePost, ResponseDummyImagePost, UpdateBoardDetail } from "@/types/board";
 
 import Bitcoin from "@assets/bitcoin.png";
 import axios from "axios";
@@ -23,103 +23,11 @@ export const BoardApi = {
       throw error;
     }
 
-    // TODO: 최근 뉴스 또는 게시글 목록을 불러오는 API 호출
-    const recentBoards: BoardListWithType = {
-      boards: [
-        {
-          boardId: 1,
-          boardType: "N",
-          thumbnail: Bitcoin,
-          title: "최근 뉴스 또는 게시글 가져오기",
-          tags: [
-            { tagId: 1, tagName: "finace" },
-            { tagId: 2, tagName: "bitcoin" },
-          ],
-          isLike: false,
-          uploader: { userId: 2, nickname: "User_02", profilePath: "https://avatars.githubusercontent.com/u/1" },
-          viewCount: 651324,
-          likeCount: 366545,
-          commentCount: 30,
-          createdTime: "2024-08-17 12:30:45",
-        },
-        {
-          boardId: 2,
-          boardType: "B",
-          thumbnail: Bitcoin,
-          title:
-            "4단계를 통해 SEO 최적화 방법을 설명합니다.  SEO를 통해 어떻게 트래픽을 관리하고 어떤 방법을 사용하는 것이 가장 좋은 방법",
-          tags: [
-            { tagId: 3, tagName: "seo" },
-            { tagId: 4, tagName: "blogging" },
-            { tagId: 5, tagName: "traffic" },
-          ],
-          isLike: true,
-          uploader: { userId: 3, nickname: "User_03", profilePath: "https://avatars.githubusercontent.com/u/1" },
-          viewCount: 651324,
-          likeCount: 366545,
-          commentCount: 30,
-          createdTime: "2024-08-17 09:38:24",
-        },
-        {
-          boardId: 3,
-          boardType: "B",
-          thumbnail: Bitcoin,
-          title: "OnePay - 온라인 결제 처리 웹앱을 소개합니다. - xxx.com에서 다운로드",
-          tags: [
-            { tagId: 11, tagName: "onepay" },
-            { tagId: 12, tagName: "online" },
-            { tagId: 13, tagName: "webapp" },
-          ],
-          isLike: true,
-          uploader: { userId: 4, nickname: "User_04", profilePath: "https://avatars.githubusercontent.com/u/1" },
-          viewCount: 5,
-          likeCount: 1,
-          commentCount: 3,
-          createdTime: "2024-06-17 12:30:45",
-        },
-        {
-          boardId: 4,
-          boardType: "N",
-          thumbnail: Bitcoin,
-          title: "사용자 인터페이스 설계 - 단 몇 달만에 1800개의 공유를 기록한 방법",
-          tags: [
-            { tagId: 14, tagName: "design" },
-            { tagId: 15, tagName: "user interface" },
-            { tagId: 16, tagName: "designing" },
-          ],
-          isLike: false,
-          uploader: { userId: 2, nickname: "User_02", profilePath: "https://avatars.githubusercontent.com/u/1" },
-          viewCount: 651324,
-          likeCount: 366545,
-          commentCount: 30,
-          createdTime: "2024-02-17 12:30:45",
-        },
-        {
-          boardId: 5,
-          boardType: "N",
-          thumbnail: Bitcoin,
-          title: "사용자 인터페이스 설계 - 단 몇 달만에 1개의 공유를 기록한 방법",
-          tags: [
-            { tagId: 14, tagName: "design" },
-            { tagId: 15, tagName: "user interface" },
-            { tagId: 16, tagName: "designing" },
-          ],
-          isLike: false,
-          uploader: { userId: 2, nickname: "User_02", profilePath: "https://avatars.githubusercontent.com/u/1" },
-          viewCount: 651324,
-          likeCount: 366545,
-          commentCount: 30,
-          createdTime: "2022-01-17 12:30:45",
-        },
-      ],
-      total: 16,
-    };
-
-    return recentBoards;
   },
   fetchRecentBoardAndNewsWithKeyword: async ({ page, count, keyword }: { page: number; count: number; keyword?: string; }) => {
     
     try { 
+      console.log("keyword search");
       const endpoint = keyword 
       ? `http://localhost:8080/board/search?page=${page}&count=${count}&keyword=${encodeURIComponent(keyword)}`
       : `http://localhost:8080/board?page=${page}&count=${count}`;
@@ -133,6 +41,26 @@ export const BoardApi = {
       return response.data;
     } catch (error) {
       console.error("검색 가져오던 중 오류 발생:", error);
+      throw error;
+    }
+  },  
+  fetchRecentBoardAndNewsWithTag: async ({ page, count, keyword }: { page: number; count: number; keyword?: string; }) => {
+    
+    try { 
+      const endpoint = keyword 
+      ? `http://localhost:8080/tag/post?page=${page}&count=${count}&keyword=${encodeURIComponent(keyword)}`
+      : `http://localhost:8080/board?page=${page}&count=${count}`;
+      console.log(endpoint);
+      const response = await axios.get(
+        endpoint,  
+        {
+          withCredentials: true
+        }
+      );
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error("태그 검색 가져오던 중 오류 발생:", error);
       throw error;
     }
   },
@@ -372,103 +300,11 @@ export const BoardApi = {
       );
       return response.data;
     } catch (error) {
-      console.error("최신 게시글를 가져오던 중 오류 발생:", error);
+      console.error("팔로워 뉴스 가져오던 중 오류 발생:", error);
       throw error;
     }
 
-    // TODO: 팔로잉 게시글 또는 뉴스 목록을 불러오는 API 호출
-    const recentBoards: BoardListWithType = {
-      boards: [
-        {
-          boardId: 1,
-          boardType: "N",
-          thumbnail: Bitcoin,
-          title: "팔로잉 뉴스 또는 게시글 가져오기",
-          tags: [
-            { tagId: 1, tagName: "finace" },
-            { tagId: 2, tagName: "bitcoin" },
-          ],
-          isLike: false,
-          uploader: { userId: 2, nickname: "User_02", profilePath: "https://avatars.githubusercontent.com/u/1" },
-          viewCount: 651324,
-          likeCount: 366545,
-          commentCount: 30,
-          createdTime: "2024-08-17 12:30:45",
-        },
-        {
-          boardId: 2,
-          boardType: "B",
-          thumbnail: Bitcoin,
-          title:
-            "4단계를 통해 SEO 최적화 방법을 설명합니다.  SEO를 통해 어떻게 트래픽을 관리하고 어떤 방법을 사용하는 것이 가장 좋은 방법",
-          tags: [
-            { tagId: 3, tagName: "seo" },
-            { tagId: 4, tagName: "blogging" },
-            { tagId: 5, tagName: "traffic" },
-          ],
-          isLike: true,
-          uploader: { userId: 3, nickname: "User_03", profilePath: "https://avatars.githubusercontent.com/u/1" },
-          viewCount: 651324,
-          likeCount: 366545,
-          commentCount: 30,
-          createdTime: "2024-08-17 09:38:24",
-        },
-        {
-          boardId: 3,
-          boardType: "B",
-          thumbnail: Bitcoin,
-          title: "OnePay - 온라인 결제 처리 웹앱을 소개합니다. - xxx.com에서 다운로드",
-          tags: [
-            { tagId: 11, tagName: "onepay" },
-            { tagId: 12, tagName: "online" },
-            { tagId: 13, tagName: "webapp" },
-          ],
-          isLike: true,
-          uploader: { userId: 4, nickname: "User_04", profilePath: "https://avatars.githubusercontent.com/u/1" },
-          viewCount: 5,
-          likeCount: 1,
-          commentCount: 3,
-          createdTime: "2024-06-17 12:30:45",
-        },
-        {
-          boardId: 4,
-          boardType: "N",
-          thumbnail: Bitcoin,
-          title: "사용자 인터페이스 설계 - 단 몇 달만에 1800개의 공유를 기록한 방법",
-          tags: [
-            { tagId: 14, tagName: "design" },
-            { tagId: 15, tagName: "user interface" },
-            { tagId: 16, tagName: "designing" },
-          ],
-          isLike: false,
-          uploader: { userId: 2, nickname: "User_02", profilePath: "https://avatars.githubusercontent.com/u/1" },
-          viewCount: 651324,
-          likeCount: 366545,
-          commentCount: 30,
-          createdTime: "2024-02-17 12:30:45",
-        },
-        {
-          boardId: 5,
-          boardType: "N",
-          thumbnail: Bitcoin,
-          title: "사용자 인터페이스 설계 - 단 몇 달만에 1개의 공유를 기록한 방법",
-          tags: [
-            { tagId: 14, tagName: "design" },
-            { tagId: 15, tagName: "user interface" },
-            { tagId: 16, tagName: "designing" },
-          ],
-          isLike: false,
-          uploader: { userId: 2, nickname: "User_02", profilePath: "https://avatars.githubusercontent.com/u/1" },
-          viewCount: 651324,
-          likeCount: 366545,
-          commentCount: 30,
-          createdTime: "2022-01-17 12:30:45",
-        },
-      ],
-      total: 16,
-    };
 
-    return recentBoards;
   },
   fetchRecommendBoards: async () => {
     
@@ -1097,13 +933,12 @@ public class Main {
       throw error;
     }
   },
-  fetchUserBoards: async ({ page, count }: { page: number; count: number;}) => {
+  fetchUserBoards: async ({ page, count, userId }: { page: number; count: number; userId?: number;}) => {
     console.log(page, count);
 
     try { 
-
-      const userData = await UserApi.getIntroUser();
-
+      const userData = userId ? await UserApi.getOneUser(userId) : await UserApi.getIntroUser();
+      
       const response = await axios.get(
         `http://localhost:8080/user/`+userData.userId+'/board',  
         {
@@ -1117,12 +952,11 @@ public class Main {
       throw error;
     }
   },
-  fetchUserNews: async ({ page, count }: { page: number; count: number;}) => {
+  fetchUserNews: async ({ page, count, userId }: { page: number; count: number; userId?: number;}) => {
     console.log(page, count);
 
     try { 
-
-      const userData = await UserApi.getIntroUser();
+      const userData = userId ? await UserApi.getOneUser(userId) : await UserApi.getIntroUser();
 
       const response = await axios.get(
         `http://localhost:8080/user/`+userData.userId+'/news',  
@@ -1137,12 +971,12 @@ public class Main {
       throw error;
     }
   },
-  fetchUserLikes: async ({ page, count }: { page: number; count: number;}) => {
+  fetchUserLikes: async ({ page, count, userId }: { page: number; count: number; userId?: number;}) => {
     console.log(page, count);
 
     try { 
 
-      const userData = await UserApi.getIntroUser();
+      const userData = userId ? await UserApi.getOneUser(userId) : await UserApi.getIntroUser();
 
       const response = await axios.get(
         `http://localhost:8080/user/`+userData.userId+'/like',  
@@ -1157,12 +991,12 @@ public class Main {
       throw error;
     }
   },
-  fetchUserComments: async ({ page, count }: { page: number; count: number;}) => {
+  fetchUserComments: async ({ page, count, userId}: { page: number; count: number; userId?: number}) => {
     console.log(page, count);
 
     try { 
 
-      const userData = await UserApi.getIntroUser();
+      const userData = userId ? await UserApi.getOneUser(userId) : await UserApi.getIntroUser();
 
       const response = await axios.get(
         `http://localhost:8080/user/`+userData.userId+'/comment',  
@@ -1174,6 +1008,73 @@ public class Main {
       return response.data;
     } catch (error) {
       console.error("유저 게시글를 가져오던 중 오류 발생:", error);
+      throw error;
+    }
+  },
+  postDummyImage: async (postData: RequestDummyImagePost): Promise<ResponseDummyImagePost> => {
+    try { 
+        const formData = new FormData();
+  
+        if (postData.image) {
+          formData.append('image', postData.image);
+        }      
+
+        const response = await axios.post(
+          `http://localhost:8080/dummy/image`, 
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+            withCredentials: true
+          }
+        );
+        return response.data;
+    } catch (error) {
+      console.error("더미 이미지 업로드 중 에라 에라 :", error);
+      throw error;
+    }
+  },
+  
+  fetchNewsDaily: async ({ page, count }: { page: number; count: number }) => {
+    try { 
+      const response = await axios.get(
+        `http://localhost:8080/news/daily?page=`+page+`&count=`+count,  
+        {
+          withCredentials: true
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("일일 뉴스가져오던 중 오류 발생:", error);
+      throw error;
+    }
+  },
+  fetchNewsMonths: async ({ page, count }: { page: number; count: number }) => {
+    try { 
+      const response = await axios.get(
+        `http://localhost:8080/news/monthly?page=`+page+`&count=`+count,  
+        {
+          withCredentials: true
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("월간 뉴스가져오던 중 오류 발생:", error);
+      throw error;
+    }
+  },
+  fetchNewsFollowing: async ({ page, count }: { page: number; count: number }) => {
+    try { 
+      const response = await axios.get(
+        `http://localhost:8080/board/following?page=`+page+`&count=`+count,  
+        {
+          withCredentials: true
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("팔로워 뉴스가져오던 중 오류 발생:", error);
       throw error;
     }
   },

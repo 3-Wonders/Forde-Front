@@ -5,6 +5,7 @@ import styles from "./Toolbar.module.scss";
 
 import EditorDialog from "@/components/Editor/EditorDialog/EditorDialog";
 import TableDialog from "../TableDialog/TableDialog";
+import { BoardApi } from "@/api/board";
 
 type ToolbarProps = {
   editor: Editor;
@@ -180,8 +181,10 @@ const Toolbar = ({ editor, onChangeImage }: ToolbarProps) => {
 
       if (file) {
         try {
-          editor.commands.setImage({ src: URL.createObjectURL(file), alt: file.name });
-          onChangeImage?.(1);
+          const response = await BoardApi.postDummyImage({image: file}); // ResponseDummyImagePost - return
+
+          editor.commands.setImage({ src: response.path, alt: file.name }); // URL.createObjectURL(file)
+          onChangeImage?.(response.imageId);
         } catch (error) {
           console.error(error);
         }

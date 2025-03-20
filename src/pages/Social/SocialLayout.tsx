@@ -97,12 +97,12 @@ const SocialLayout = () => {
         <div className="socialInner">
           <div className="socialLeftCard">
             <ul className="socialMenu">
-              <li className="active">
+              <a href="/setting"><li className="active">
                 소셜
-              </li>
-              <li>
+              </li></a>
+              <a href="/notice"><li>
                 알림
-              </li>
+              </li></a>
             </ul>
           </div>
 

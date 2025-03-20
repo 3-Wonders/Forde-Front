@@ -33,6 +33,9 @@ import PassowrdVerify from "@/pages/PasswordVerify/PassowrdVerify";
 import ActivateBoardLayout from "@/pages/MyPageActiveBoard/ActiveBoardLayout";
 import ActiveCommentLayout from "@/pages/MyPageActivateComments/ActiveCommentLayout";
 import ActiveLikeLayout from "@/pages/MyPageActivateLikes/ActiveLikeLayout";
+import TagSearch from "@/pages/Search/TagSearch";
+import Monthly from "@/pages/Monthly/Monthly";
+import Daily from "@/pages/Daily/Daily";
 
 /**
  * router 파일은 어떤 주소에 어떤 pages/[filename].tsx가 띄워질지 정하는 파일입니다.
@@ -56,12 +59,24 @@ const router = createBrowserRouter([
         element: <Board />,
       },
       {
-        path: "/follow",
+        path: "/news/follow",
         element: <Follow />,
+      },
+      {
+        path: "/news/months",
+        element: <Monthly />,
+      },
+      {
+        path: "/news/daily",
+        element: <Daily />,
       },
       {
         path: "/search",
         element: <Search />,
+      },
+      {
+        path: "/search/tag",
+        element: <TagSearch />,
       },
       {
         path: "/board/:boardId",
@@ -127,7 +142,7 @@ const router = createBrowserRouter([
     element: <AccountLayout />,
   },
   {
-    path: "/social",
+    path: "/setting",
     element: <SocialLayout />,
   },
   {

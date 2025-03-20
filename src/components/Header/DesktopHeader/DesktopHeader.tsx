@@ -1,5 +1,7 @@
 import { useCallback, useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { useDebouncedCallback } from "use-debounce";
 
 import HomeSvg from "@assets/home.svg";
 import NewsSvg from "@assets/news.svg";
@@ -15,12 +17,12 @@ import DeleteSvg from "@assets/new.svg"; // 삭제 아이콘 임시 땜빵
 import classes from "./DesktopHeader.module.scss";
 
 import Notification from "@/features/Notification/Notification";
-
 import Modal from "@/components/Modal/Modal";
 
 import useUser from "@/hooks/useUser";
 import useAppStore from "@/stores/useAppStore";
-import { BoardApi } from "@/api/board";
+import { TagApi } from "@/api/tag"; // 태그 API 추가
+import { Chip} from "@mui/material";
 
 // 검색 내역 관련 유틸리티 함수들
 const getSearchHistory = (): string[] => {
@@ -62,6 +64,24 @@ const DesktopHeader = () => {
   const [searchHistory, setSearchHistory] = useState<string[]>([]);
   const [showHistory, setShowHistory] = useState<boolean>(false);
   const searchInputRef = useRef<HTMLDivElement>(null);
+  
+  // 태그 검색 관련 상태 추가
+  const [isTagMode, setIsTagMode] = useState<boolean>(false);
+  const [tagKeyword, setTagKeyword] = useState<string>("");
+  const [selectedTag, setSelectedTag] = useState<any>(null);
+  const [showTagDropdown, setShowTagDropdown] = useState<boolean>(false);
+  
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // 태그 검색 쿼리 추가
+  const { data: tagResults, isLoading: isTagLoading } = useQuery({
+    queryKey: ["tagSearch", tagKeyword],
+    queryFn: async () => {
+      return await TagApi.fetchSearchTags(tagKeyword);
+    },
+    enabled: isTagMode && tagKeyword.length > 0,
+    staleTime: 1000 * 60, // 1분
+  });
 
   // 컴포넌트 마운트 시 검색 내역 로드
   useEffect(() => {
@@ -70,11 +90,12 @@ const DesktopHeader = () => {
     }
   }, [isLocalHistory]);
 
-  // 검색창 외부 클릭 시 검색 기록 숨기기
+  // 검색창 외부 클릭 시 검색 기록 및 태그 드롭다운 숨기기
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (searchInputRef.current && !searchInputRef.current.contains(event.target as Node)) {
         setShowHistory(false);
+        setShowTagDropdown(false);
       }
     };
 
@@ -85,22 +106,88 @@ const DesktopHeader = () => {
   }, []);
 
   const onSearch = useCallback(() => {
-    if (keyword.trim()) {
-      navigate(`/search?keyword=${keyword}`, { preventScrollReset: false });
+    if (selectedTag) {
+      // 태그 검색 실행
+      navigate(`/search/tag?tag=${selectedTag.tagName}`, { preventScrollReset: false });
       
+      // 검색 기록 저장 (isLocalHistory가 true일 때만)
+      if (isLocalHistory) {
+        const newHistory = saveSearchHistory(`#${selectedTag.tagName}`);
+        setSearchHistory(newHistory);
+      }
+    } else if (keyword.trim()) {
+      // 일반 검색 실행
+      navigate(`/search?keyword=${keyword}`, { preventScrollReset: false });
       
       // 검색 기록 저장 (isLocalHistory가 true일 때만)
       if (isLocalHistory) {
         const newHistory = saveSearchHistory(keyword);
         setSearchHistory(newHistory);
       }
-      
-      setShowHistory(false);
     }
-  }, [keyword, navigate, isLocalHistory]);
+    
+    // 검색 후 상태 초기화
+    setShowHistory(false);
+    setShowTagDropdown(false);
+  }, [keyword, selectedTag, navigate, isLocalHistory]);
 
   const handleChangeKeyword = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setKeyword(e.target.value);
+    const value = e.target.value;
+    
+    // 태그 모드 검사 및 전환
+    if (value === "#" && !isTagMode) {
+      setIsTagMode(true);
+      setTagKeyword("");
+      setShowTagDropdown(true);
+      setKeyword("#");
+      return;
+    }
+    
+    // 태그 모드인 경우
+    if (isTagMode) {
+      // 태그 모드에서 # 삭제 시 태그 모드 해제
+      if (!value.startsWith("#")) {
+        setIsTagMode(false);
+        setSelectedTag(null);
+        setKeyword(value);
+        return;
+      }
+      
+      // 태그 선택 후 추가 입력 시도하면 태그 삭제
+      if (selectedTag && value.length > selectedTag.tagName.length + 1) {
+        setIsTagMode(false);
+        setSelectedTag(null);
+        setKeyword(value);
+        return;
+      }
+      
+      // 태그 검색어 업데이트
+      if (!selectedTag) {
+        setTagKeyword(value.substring(1));
+        setKeyword(value);
+        setShowTagDropdown(true);
+      }
+      return;
+    }
+    
+    // 일반 모드
+    setKeyword(value);
+  }, [isTagMode, selectedTag]);
+
+  const handleRemoveTag = useCallback(() => {
+    setSelectedTag(null);
+    setIsTagMode(false);
+    setKeyword("");
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
+
+    // 태그 선택 핸들러 수정
+  const handleSelectTag = useCallback((tag: any) => {
+    setSelectedTag(tag);
+    setKeyword(""); // 입력창 비우기 (태그 선택 시 입력창 비움)
+    setShowTagDropdown(false);
   }, []);
 
   const handleKeyDownEnter = useCallback(
@@ -125,20 +212,34 @@ const DesktopHeader = () => {
   }, []);
 
   const handleLogout = useCallback(() => {
-    // setIsOpenProfile(false);
     logout();
   }, [logout]);
 
   const handleSearchFocus = useCallback(() => {
-    if (isLocalHistory && searchHistory.length > 0) {
+    if (isTagMode) {
+      setShowTagDropdown(true);
+    } else if (isLocalHistory && searchHistory.length > 0) {
       setShowHistory(true);
     }
-  }, [isLocalHistory, searchHistory]);
+  }, [isLocalHistory, searchHistory, isTagMode]);
 
   const handleSelectHistory = useCallback((term: string) => {
-    setKeyword(term);
     setShowHistory(false);
-    navigate(`/search?keyword=${term}`, { preventScrollReset: false });
+    
+    // 태그 검색 기록 선택 시
+    if (term.startsWith('#')) {
+      const tmpTag = {
+        tagId: 0,
+        tagName: term.substring(1)
+      };
+      
+      setSelectedTag(tmpTag);
+      setIsTagMode(true);
+      navigate(`/search/tag?tag=${term.substring(1)}`, { preventScrollReset: false });
+    } else {
+      setKeyword(term);
+      navigate(`/search?keyword=${term}`, { preventScrollReset: false });
+    }
     
     // 선택한 검색어를 최상단으로 이동
     if (isLocalHistory) {
@@ -186,22 +287,57 @@ const DesktopHeader = () => {
             </Link>
           </div>
           <div className={classes.searchContainer} ref={searchInputRef}>
-            <label className={classes.inputBox} htmlFor="search">
-              <input
-                id="search"
-                type="text"
-                placeholder="검색어 입력"
-                value={keyword}
-                onChange={handleChangeKeyword}
-                onKeyDown={handleKeyDownEnter}
-                onFocus={handleSearchFocus}
-                autoComplete="off"
+          <label className={`${classes.inputBox} ${selectedTag ? classes.hasTag : ''}`} htmlFor="search">
+            {selectedTag && (
+              <Chip 
+                label={`#${selectedTag.tagName}`}
+                onDelete={handleRemoveTag}
+                variant="outlined"
+                size="small"
               />
-              <img src={SearchSvg} alt="검색 아이콘" onClick={handleClickSearchIcon} width={18} height={18} />
-            </label>
+            )}
+            <input
+              id="search"
+              ref={inputRef}
+              type="text"
+              placeholder={isTagMode ? "검색어 입력 시 태그 검색이 취소됩니다" : "검색어 입력"}
+              value={keyword}
+              onChange={handleChangeKeyword}
+              onKeyDown={handleKeyDownEnter}
+              onFocus={handleSearchFocus}
+              autoComplete="off"
+              className={`${isTagMode && !selectedTag ? classes.tagInput : ""} ${selectedTag ? classes.hiddenInput : ""}`}
+            />
+            <img src={SearchSvg} alt="검색 아이콘" onClick={handleClickSearchIcon} width={18} height={18} />
+          </label>
+            {/* 태그 검색 드롭다운 */}
+            {isTagMode && showTagDropdown && !selectedTag && (
+              <div className={classes.tagDropdown}>
+                <div className={classes.tagHeader}>
+                  <span>태그 검색</span>
+                </div>
+                <ul className={classes.tagList}>
+                  {isTagLoading ? (
+                    <li className={classes.loadingItem}>태그 검색 중...</li>
+                  ) : tagResults?.tags && tagResults.tags.length > 0 ? (
+                    tagResults.tags.map((tag) => (
+                      <li 
+                        key={tag.tagId} 
+                        className={classes.tagItem}
+                        onClick={() => handleSelectTag(tag)}
+                      >
+                        <span className={classes.tagText}>#{tag.tagName}</span>
+                      </li>
+                    ))
+                  ) : (
+                    <li className={classes.emptyItem}>검색 결과가 없습니다</li>
+                  )}
+                </ul>
+              </div>
+            )}
             
             {/* 검색 기록 드롭다운 */}
-            {isLocalHistory && showHistory && searchHistory.length > 0 && (
+            {!isTagMode && isLocalHistory && showHistory && searchHistory.length > 0 && (
               <div className={classes.historyDropdown}>
                 <div className={classes.historyHeader}>
                   <span>최근 검색어</span>

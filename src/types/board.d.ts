@@ -22,6 +22,11 @@ export type UpdateBoardDetail = Omit<Board, "uploader" | "isLike" | "likeCount" 
   imageIds: number[];
 };
 
+export type ResponseDummyImagePost = {
+  imageId: number;
+  path: string;
+}
+
 export type DraftBoard = {
   draftId: number;
   boardType: BoardType;
@@ -107,4 +112,8 @@ export type RequestBoardPost = {
   tagIds?: number[];
   thumbnail?: File | null;
   imageIds?: number[];
+}
+
+export type RequestDummyImagePost = {
+  image: File;
 }
