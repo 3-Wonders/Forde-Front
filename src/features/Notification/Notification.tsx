@@ -147,7 +147,9 @@ const Notification = () => {
               ) : (
                 data.pages.map((page) =>
                   page.notifications.map((notification) => (
-                    <Link to={`/board/${notification.board.boardId}`} key={notification.notificationId}>
+                    <Link 
+                      to={notification.board?.boardId ? `/board/${notification.board.boardId}` : `/`} 
+                      key={notification.notificationId}>
                       <div className={classes.top}>
                         <img src={notification.sender.profilePath} alt="프로필 이미지" />
                         <div className={classes.info}>

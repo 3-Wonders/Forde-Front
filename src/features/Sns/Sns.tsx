@@ -18,12 +18,12 @@ const Sns = () => {
 
   const kakaoJavascriptKey: string = useMemo(() => import.meta.env.VITE_KAKAO_JAVASCRIPT_KEY, []);
   const kakaoRedirectUri: string = useMemo(() => import.meta.env.VITE_KAKAO_REDIRECT_URI, []);
-  const kakaoAccessUrl: string = useMemo(() => import.meta.env.VITE_KAKAO_ACCESS_URI, []);
+  const kakaoAccessUrl: string = useMemo(() => import.meta.env.VITE_KAKAO_REDIRECT_URI, []);
   const kakaoState: string = useMemo(() => Math.random().toString(36).substring(2, 11), []);
 
   const naverClientId: string = useMemo(() => import.meta.env.VITE_NAVER_CLIENT_ID, []);
   const naverRedirectUri: string = useMemo(() => import.meta.env.VITE_NAVER_REDIRECT_URI, []);
-  const naverAccessUrl: string = useMemo(() => import.meta.env.VITE_NAVER_ACCESS_URI, []);
+  const naverAccessUrl: string = useMemo(() => import.meta.env.VITE_NAVER_REDIRECT_URI, []);
   const naverState: string = useMemo(() => Math.random().toString(36).substring(2, 11), []);
 
   const googleClientId: string = useMemo(() => import.meta.env.VITE_GOOGLE_CLIENT_ID, []);
@@ -31,7 +31,7 @@ const Sns = () => {
 
   const githubClientId: string = useMemo(() => import.meta.env.VITE_GITHUB_CLIENT_ID, []);
   const githubRedirectUri: string = useMemo(() => import.meta.env.VITE_GITHUB_REDIRECT_URI, []);
-  const githubAccessUrl: string = useMemo(() => import.meta.env.VITE_GITHUB_ACCESS_URI, []);
+  const githubAccessUrl: string = useMemo(() => import.meta.env.VITE_GITHUB_REDIRECT_URI, []);
 
   const location = useLocation();
 

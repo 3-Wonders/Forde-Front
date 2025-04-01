@@ -324,7 +324,7 @@ export const UserApi = {
   },
   logout: async () => {
     try {
-      const response = await axios.post(`http://localhost:8080/user/logout`, 
+      const response = await axios.post(`http://localhost:8080/user/logout`, {},
         {withCredentials: true}
       );
 

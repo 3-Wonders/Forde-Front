@@ -24,6 +24,7 @@ export type OtherUser = {
   likeCount: number;
   commentCount: number;
   isPrivate: boolean;
+  isFollowing: boolean;
 };
 
 export type SnsInfo = {

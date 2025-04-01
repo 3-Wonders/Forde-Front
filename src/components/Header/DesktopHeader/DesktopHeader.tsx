@@ -212,6 +212,7 @@ const DesktopHeader = () => {
   }, []);
 
   const handleLogout = useCallback(() => {
+    alert("logout");
     logout();
   }, [logout]);
 
