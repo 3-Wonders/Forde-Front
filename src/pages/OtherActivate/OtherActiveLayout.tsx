@@ -86,7 +86,7 @@ const ActivateLayout = () => {
         setFollowerCount(userData.followerCount);
         setFollowingCount(userData.followingCount);
         setIsPrivate(userData.isPrivate);
-        setIsFollowing(userData.isFollowing);
+        setIsFollowing(userData.isFollow);
       } catch (error) {
         console.error("사용자 정보를 불러오는 중 오류 발생", error);
       }
@@ -193,13 +193,15 @@ const ActivateLayout = () => {
             </div>
             <button
               className={`
-                ${isFollowing ? classes.followingBtn : classes.followBtn}
+                ${(isFollowing && isPrivate) ? classes.followingBtn : classes.followBtn}
                 ${isAnimated ? classes.animated : ""}
               `}
               onClick={handleFollowClick}
+              disabled={isPrivate}
             >
               {isFollowing ? "팔로잉" : "팔로우"}
             </button>
+
           </div>
         </div>
       </div>

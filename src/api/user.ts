@@ -1,4 +1,5 @@
 import { IntroUser, OtherUser, SnsInfos, User, Notification, PostVerifyParams, PostVerifyResponse, PatchPasswordParams, PostVerifyCompareParams, PostLoginParams, PostRegisterParams, UserNotificationResponse, UsersMentionResponse, MentionUser } from "@/types/user";
+import { ErrorCode } from "@/utils/constants";
 import axios from "axios";
 
 export const UserApi = {
@@ -24,6 +25,7 @@ export const UserApi = {
           withCredentials: true
         }
       );
+      console.log(response.data);
       return response.data;
     } catch (error) {
       console.error("유저 정보 가져오던 중 오류 발생:", error);
@@ -43,6 +45,11 @@ export const UserApi = {
       return response.data;
     } catch (error) {
       console.error("유저 정보 가져오던 중 오류 발생:", error);
+      if (axios.isAxiosError(error) && error.response) {
+        if (error.response.data.errorCode == ErrorCode.NOT_VERIFIED_USER){
+          window.location.href = "/email/verify";
+        }
+      }
       throw error;
     }
 
@@ -60,32 +67,6 @@ export const UserApi = {
     } catch (error) {
       console.error("유저 정보 가져오던 중 오류 발생:", error);
       throw error;
-    }
-    return {
-      userId: 2,
-      email: "seungyong20@naver.com",
-      snsInfos: [
-        {
-          snsKind: 1001,
-          snsName: "github",
-          isConnect: true
-        },
-        {
-          snsKind: 1002,
-          snsName: "google",
-          isConnect: false
-        },
-        {
-          snsKind: 1003,
-          snsName: "naver",
-          isConnect: false
-        },
-        {
-          snsKind: 1004,
-          snsName: "kakao",
-          isConnect: true
-        },
-      ]
     }
   },
   // 사용자 정보 수정 눌렀을 때 호출

@@ -33,7 +33,7 @@ const ActiveCommentLayout = () => {
           <MyPageNavigation isActive={3} />
         </div>
         <main className={classes.main}>
-            <CategoryNavigation isActive={3}/>
+            <CategoryNavigation isActive={3} />
             <InfinityScrollBoard
                 queryKey={["userComment", count]}
                 fetchFunction={BoardApi.fetchUserComments}
