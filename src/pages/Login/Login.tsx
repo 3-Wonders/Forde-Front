@@ -23,11 +23,14 @@ import { validationEmail, validationPassword } from "@/utils/validation";
 
 import { UserApi } from "@/api/user";
 
+import useUser from "@/hooks/useUser"
+
 type InputKey = "email" | "password";
 
 const Login = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { login } = useUser();
 
   const [formData, setFormData] = useState<InputDataSet<InputKey, string>>({
     email: {
@@ -114,8 +117,8 @@ const Login = () => {
 
       // TODO: 로그인 API 호출
       console.table(formData);
-      const response = await UserApi.login({email:formData.email.value, password:formData.password.value});
-
+      // const response = await UserApi.login({email:formData.email.value, password:formData.password.value});
+      const response = await login({email : formData.email.value, password: formData.password.value})
       // 여기서 response.errorCode
       if(response?.response?.data?.errorCode != null){
         if(response.response.data.errorCode == "F40302")

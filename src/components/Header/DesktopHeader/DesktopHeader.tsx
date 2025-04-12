@@ -105,6 +105,13 @@ const DesktopHeader = () => {
     };
   }, []);
 
+  // 프로필 모달 상태를 user 값에 따라 초기화하는 useEffect 추가
+  useEffect(() => {
+    if (!user) {
+      setIsOpenProfile(false);
+    }
+  }, [user]);
+
   const onSearch = useCallback(() => {
     if (selectedTag) {
       // 태그 검색 실행
@@ -211,10 +218,14 @@ const DesktopHeader = () => {
     setIsOpenProfile(false);
   }, []);
 
-  const handleLogout = useCallback(() => {
-    alert("logout");
-    logout();
-  }, [logout]);
+  const handleLogout = useCallback(async () => {
+    try {
+      await logout();
+      navigate("/"); // 필요하다면 홈으로 리다이렉트
+    } catch (error) {
+      console.error("로그아웃 중 오류 발생:", error);
+    }
+  }, [logout, navigate]);
 
   const handleSearchFocus = useCallback(() => {
     if (isTagMode) {
