@@ -1,7 +1,6 @@
 [ 작성 중... ]
 # 📖 개발자를 위한 우리들의 리그 FORDE
 
-![readme_mockup2](https://github.com/7-wonders/PerfectFit/blob/develop/banner.png)
 
 <br>
 
