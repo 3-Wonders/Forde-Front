@@ -10,10 +10,6 @@
 - 다양한 알고리즘 문제 풀이를 시도해볼 수 있고, 의견을 나눌 수 있습니다.
 - 나의 문제 풀이 실력을 뽐내보세요.
 
-<br>
-
-## 사용 방법 ❤
-
 
 
 <br>
@@ -641,21 +637,83 @@ Forde-Frontend/
 
 
 ## 6. 페이지별 기능
-### 6-1. 회원가입
-### 6-2. 로그인
-### 6-3. 메인 페이지
-### 6-4. 메인 페이지 - 좌측 사이드 메뉴
-### 6-5. 메인 페이지 - 우측 사이드 메뉴
-### 6-6. 메인 페이지 - 알림 확인
-### 6-7. 게시글 작성 
-### 6-8. 게시글 상세 확인
-### 6-9. 게시글 댓글
-### 6-10. 게시글 대댓글
-### 6-11. 마이페이지 - 기초 정보 수정
-### 6-12. 마이페이지 - 연동 정보 
-### 6-13. 마이페이지 - 알림 정보
-### 6-14. 마이페이지 - 타 유저 정보
+## 
+
+### **6-1. 회원가입**
+<img width="993" height="944" alt="Image" src="https://github.com/user-attachments/assets/c2190ed8-282e-46b4-9173-c5b7f2454a48" />
+
+### **6-2. 로그인**
+<img width="1229" height="887" alt="Image" src="https://github.com/user-attachments/assets/5fa23644-3dbc-491c-8fb2-5e9cb1c0f624" />
+
+<img width="1189" height="720" alt="Image" src="https://github.com/user-attachments/assets/23b60f28-145a-4b96-9019-d84277e308d1" />
+
+<img width="1041" height="363" alt="Image" src="https://github.com/user-attachments/assets/1b925147-2d53-41d6-b429-a9c688d92bbc" />
+
+<img width="579" height="424" alt="Image" src="https://github.com/user-attachments/assets/21f9d987-2539-43f0-8752-43199a3a3faa" />
+
+### **6-3. 메인 페이지**
+<img width="1919" height="1056" alt="Image" src="https://github.com/user-attachments/assets/855fbb98-d3fb-445d-b01c-a2422389f2d0" />
+
+### **6-4. 메인 페이지 - 좌측 사이드 메뉴**
+<img width="828" height="848" alt="Image" src="https://github.com/user-attachments/assets/441c160b-a962-4479-84e6-e3af0e19c9d0" />
+
+<img width="1908" height="1053" alt="Image" src="https://github.com/user-attachments/assets/8fe948b2-23c3-473d-8c2c-1a6841e76d8c" />
+
+### **6-5. 메인 페이지 - 우측 사이드 메뉴**
+<img width="520" height="734" alt="Image" src="https://github.com/user-attachments/assets/bca96c1d-62b7-426c-a252-00ff01044e48" />
+
+### **6-6. 메인 페이지 - 알림 확인**
+<img width="997" height="563" alt="Image" src="https://github.com/user-attachments/assets/dcbbd4d4-d7e3-4d5e-9c25-034a6737c47d" />
+
+
+### **6-7. 게시글 작성**
+<img width="1890" height="1060" alt="Image" src="https://github.com/user-attachments/assets/3c40d653-a834-4fff-814a-1540723ef302" />
+
+<img width="1911" height="1051" alt="Image" src="https://github.com/user-attachments/assets/f563d619-2f84-4849-8447-11e4fc04a5da" />
+
+<img width="1917" height="1042" alt="Image" src="https://github.com/user-attachments/assets/6f38cb66-8fcf-4794-8d95-d77d195c3038" />
+
+### **6-8. 게시글 상세 확인**
+<img width="1916" height="995" alt="Image" src="https://github.com/user-attachments/assets/c8b67726-4d74-449a-90cd-a367d91566b5" />
+
+
+### **6-9. 게시글 댓글**
+<img width="1903" height="994" alt="Image" src="https://github.com/user-attachments/assets/d6294226-4ef1-4764-a001-06819fa8a772" />
+
+<img width="1900" height="985" alt="Image" src="https://github.com/user-attachments/assets/d70d5a40-c084-4913-bb69-001c9d3e26fc" />
+
+### **6-10. 게시글 대댓글**
+<img width="1907" height="997" alt="Image" src="https://github.com/user-attachments/assets/6227ee9f-b718-45ac-aeaf-a644d53c4daa" />
+
+<img width="1914" height="997" alt="Image" src="https://github.com/user-attachments/assets/5d3cc51b-8c15-4931-bc77-2a1f1f54d0af" />
+
+### **6-11. 마이페이지 - 기초 정보 수정**
+<img width="1913" height="1052" alt="Image" src="https://github.com/user-attachments/assets/70cc0a2c-bac2-44d5-9b98-ed794283a451" />
+
+### **6-12. 마이페이지 - 연동 정보**
+<img width="1913" height="1055" alt="Image" src="https://github.com/user-attachments/assets/85a98107-61d3-4bf3-815c-1257e067680b" />
+
+### **6-13. 마이페이지 - 알림 정보**
+<img width="1925" height="1087" alt="Image" src="https://github.com/user-attachments/assets/0b1eb288-475f-4c0b-8e4e-c854f882032b" />
+
+<img width="1916" height="1080" alt="Image" src="https://github.com/user-attachments/assets/99d9a8a1-b48c-465f-abac-6af70335e41d" />
+
+### **6-14 마이페이지 - 활동 정보**
+<img width="1913" height="1054" alt="Image" src="https://github.com/user-attachments/assets/6c053517-5597-4a13-a90b-467a9cd2d134" />
+
+### **6-15. 마이페이지 - 타 유저 정보**
+<img width="1914" height="1055" alt="Image" src="https://github.com/user-attachments/assets/e8ba64ce-4dc3-4653-80f6-82854a186b08" />
 
 ## 7. 개선 목표
 
-- 
+안녕하십니까. 저희 Forde의 Readme를 읽어주셔서 감사합니다. 프로젝트를 되돌아보며 앞으로의 개선점을 간략하게 서술해보도록 하겠습니다.
+
+우선, 저희도 인지하고있는 문제점은 다음과 같습니다. 웹 데이터의 로딩 속도 문제로 페이지가 사용자에게 비교적 늦게 표시되는 점. 그리고 특정 상호작용( e.g. SNS 연동 및 이메일 전송 )에서 서버단에서 실제로 데이터가 처리되고 있음에도 사용자에게 알리지 못하고 있는 점을 인지하고 있습니다. 하여 아래와 같은 방법으로 개선하고자 합니다.
+
+**첫째, 로딩 성능 최적화를 위해** 프론트엔드에서는 React의 코드 스플리팅과 지연 로딩을 도입하여 초기 번들 크기를 줄이고, 백엔드에서는 데이터베이스 쿼리 최적화 및 Redis 캐싱 시스템을 구축하여 응답 속도를 개선할 예정입니다.
+
+**둘째, 사용자 피드백 시스템 강화를 위해** 모든 비동기 작업에 로딩 상태 표시와 진행률 바를 추가하고, WebSocket을 활용한 실시간 알림 시스템을 구현하여 서버 처리 상황을 사용자에게 투명하게 전달할 계획입니다.
+
+**셋째, 전반적인 UX 개선을 위해** 스켈레톤 로딩 화면, Toast 알림 시스템, 그리고 직관적인 에러 메시지를 도입하여 사용자가 현재 상황을 명확히 파악할 수 있도록 하겠습니다.
+
+이러한 개선사항들을 단계적으로 적용하여 더욱 완성도 작품을 게시하도록 노력하겠습니다.
